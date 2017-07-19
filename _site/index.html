@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords"  content="">
+    
+    <title>Wwt-blog</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://wuwt.me//">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- font-awesome CSS -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Highlight CSS -->
+    <link rel="stylesheet" href="/css/googlecode.css">
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Wwt-blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">首页</a>
+                    </li>
+                    <li>
+                        <a href="/tags">标签</a>
+                    </li>
+                    <li>
+                        <a href="/about">关于</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/bg/bg_index.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Wwt-blog</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">学习 生活 分享</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2017/04/11/logistic-2017/">
+        <h2 class="post-title">
+            Logistic回归
+        </h2>
+        
+        <h3 class="post-subtitle">
+            回归算法
+        </h3>
+        
+        <div class="post-content-preview">
+            ​	逻辑回归模型其实仅在线性回归的基础上，套用了一个逻辑函数， 但也就由于这个逻辑函数，使得逻辑回归模型成为了机器学习领域一颗耀眼的明星。
+
+逻辑回归模型
+
+​	回归是一种极易理解的模型，假设现在有一些数据点，我们用一条直线对这些点进行拟合（该线称为最佳拟合直线），这个拟合过程就称作回归。利用Logistic回归进行分类的主要思想是：根据现有的数据对分类边界线建立回归公式，以此进行分类。这里...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Wwt on April 11, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/03/22/HMM-2017/">
+        <h2 class="post-title">
+            隐马尔科夫模型
+        </h2>
+        
+        <h3 class="post-subtitle">
+            HMM
+        </h3>
+        
+        <div class="post-content-preview">
+            ​	隐马尔科夫模型是一个并不复杂的数学模型，到目前为止，他一直被认为是解决大多数的自然语言处理问题最为快速、有效的方法。它成功地解决了复杂的语音识别、机器翻译等问题。
+
+1.马尔科夫链
+
+​	马尔科夫过程是俄国数学家A.A.马尔科夫提出的，其原始模型为马尔科夫链。马尔科夫链是指时间和状态都是离散的马尔科夫过程。该过程具有如下特性：在已知系统当前状态的条件下，它未来的演变不依赖于过去的演变。也...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Wwt on March 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/03/14/Nerual-NetWork-2017/">
+        <h2 class="post-title">
+            神经网络
+        </h2>
+        
+        <h3 class="post-subtitle">
+            后向传播算法
+        </h3>
+        
+        <div class="post-content-preview">
+            ​	最近在看张重生著的《深度学习》这本书，看到神经网络这一章，顿时恍然大悟，发现自己对神经网络这一块有了新的理解和感受。于是写下这篇笔记，加深自己的体会。
+
+​	神经网络的神经网络是一种经典的机器学习算法，随着对神经网络研究的不断深入，目前，它在模式识别、物体检测、视频分析和图像识别领域等领域发挥着越来越重要的作用。
+
+1.神经元的概念
+
+​	神经元是构成神经网络的额基本单元，其基本模型如图...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Wwt on March 14, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/03/12/SSM-2017/">
+        <h2 class="post-title">
+            Spring-SpringMVC-MyBatis
+        </h2>
+        
+        <h3 class="post-subtitle">
+            SSM
+        </h3>
+        
+        <div class="post-content-preview">
+            ​	上次我学习了一下SpringMVC ,并做了一个简单的示例程序。之后看到网上有很多ssm(springmvc,spring,maven)集成的学习示例，于是，我也打算自己动手集成ssm框架，加深一下理解。
+
+1.基本概念
+
+1.1、Spring
+
+​	spring是一个开源框架，spring是于2003年兴起的一个轻量级的Java开发框架。Spring是一个轻量级的控制反转(IOC)和面...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Wwt on March 12, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/03/04/machine-learing-2017/">
+        <h2 class="post-title">
+            贝叶斯分类器
+        </h2>
+        
+        <h3 class="post-subtitle">
+            贝叶斯
+        </h3>
+        
+        <div class="post-content-preview">
+            ​	贝叶斯分类是一类分类算法的总称，这类算法均以贝叶斯定理为基础，故统称为贝叶斯分类。
+
+介绍
+
+​	贝叶斯定理之所以有用。是因为我们生活中经常遇到这种情况：我们可以很容易直接得出 $P(A\mid B)$，$P(B\mid A)$ 则很难直接得出，但我们更关心 $p(B\mid A)$ ,贝叶斯定理就为我们打通从 $P(A\mid B)$ 获得 $P(B\mid A)$ 的道路。贝叶斯定理...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Wwt on March 4, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/03/01/machine-learing-2017/">
+        <h2 class="post-title">
+            机器学习
+        </h2>
+        
+        <h3 class="post-subtitle">
+            小结
+        </h3>
+        
+        <div class="post-content-preview">
+            最近看了周志华所著的《机器学习》一书，决定将书上一些内容记录，以供后续学习，所以你如果看到书上原文，请不要惊讶。
+
+引言
+
+​	在我们十几年的学生生涯中，我们从以往的学习经验知道，下足了功夫、弄清了概念、做好了作业，自然会取得好成绩。可以看出，我们能做出有效的判断，是因为我们积累了经验，而对经验的利用，就能对新的情况作出有效的决策。
+
+​	机器学习正是这样一门学科，它致力于研究如何通过计算手...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Wwt on March 1, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/02/22/SpringMVC-2017/">
+        <h2 class="post-title">
+            SpringMVC入门
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Springmvc示例
+        </h3>
+        
+        <div class="post-content-preview">
+            本文主要介绍Springmvc的框架原理，并通过一个入门程序展示搭建环境，配置以及部署。
+
+springmvc框架原理图
+
+
+
+组件及其作用
+
+
+  前端控制器(DispatcherServlet):接收请求，响应结果，相当于转发器，中央处理器。减少了其他组件之间的耦合度。
+  处理器映射器(HandlerMapping):根据请求的url查找的Handler.
+  Handler处理器:按...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by wwt on February 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/02/01/hello-world-2017/">
+        <h2 class="post-title">
+            Hello world, 2017
+        </h2>
+        
+        <h3 class="post-subtitle">
+            欢迎使用
+        </h3>
+        
+        <div class="post-content-preview">
+            这是 xs-huxblog 博客模板的一篇示例文档，使用 Markdown 语法编写。
+
+Markdown 是一种非常简单的排版语法，几分钟就能够基本掌握。使用 Markdown 语法来编写博客将是一件非常惬意的事，你从此不需要为了各种各样的排版效果而浪费精力，而是将注意力集中在编写内容本身。
+
+
+
+我是小昇，接下来由我简单介绍一下文章支持的语法格式：
+
+
+  基本 Markdown 语法
+...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Xiaosheng on February 1, 2017
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">热门标签</a></h5>
+                    <div class="tags">
+                        
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#机器学习" title="机器学习" rel="3">
+                                    机器学习
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">关于我</a></h5>
+                    <div class="short-about">
+                        
+                            <img src="/img/avatar-wwt.jpg" />
+                        
+                        
+                            <p>专于业专于代码，乐于分享</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            <li>
+                                <a target="_blank" href="https://www.zhihu.com/people/ling-du-qing-xu">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a target="_blank" href="http://weibo.com/3537251257">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/Alivewwt">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>友情链接</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://xiaosheng.me">小昇的博客</a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/ling-du-qing-xu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3537251257">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Alivewwt">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Wwt-blog 2017
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async
+  src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- Highlight.js -->
+<script>
+    async("http://cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js", function(){
+        hljs.initHighlightingOnLoad();
+    })
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Baidu Push-->
+<script>
+    // do not push in tag.html
+    if($('#tag_cloud').length == 0){
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    }
+</script>
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '07529a93af5fa9f808261a1318c3aba4';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.jpg" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

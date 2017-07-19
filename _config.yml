@@ -1,0 +1,62 @@
+# Site settings
+title: Wwt-blog
+SEOTitle: Wwt-blog
+header-img: img/bg/bg_index.jpg
+email: m13032536099@163.com
+description: ""
+keyword: ""
+url: "http://wuwt.me/"              # your host, for absolute URL
+baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+
+# SNS settings
+weibo_username: 3537251257
+zhihu_username: ling-du-qing-xu
+github_username: Alivewwt
+
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+highlighter: rouge
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+# Wangyi Gentie settings
+netease_gentie: false                    # whether or not using netease gentie
+gt_product_Key: 68cb5cb1ac1145f585ca0e38c1111b72
+
+# Baidu Share
+bd_share: true                          # whether or not using baidu share
+
+# Analytics settings
+# Baidu Analytics
+ba_track_id: 07529a93af5fa9f808261a1318c3aba4
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "专于业专于代码，乐于分享"
+sidebar-avatar: /img/avatar-wwt.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+# Featured Tags
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+
+# Friends
+friends: [
+    {
+        title: "小昇的博客",
+        href: "http://xiaosheng.me"
+    }
+]

@@ -1,0 +1,449 @@
+---
+layout:     post
+title:      "Spring-SpringMVC-MyBatis"
+subtitle:   "SSM"
+date:       2017-03-12 11:00:00
+author:     "Wwt"
+header-img: "img/bg/ssm.jpg"
+tags:   
+    - SSM 框架集成
+---
+​	上次我学习了一下SpringMVC ,并做了一个简单的示例程序。之后看到网上有很多ssm(springmvc,spring,maven)集成的学习示例，于是，我也打算自己动手集成ssm框架，加深一下理解。
+
+## 1.基本概念
+
+### 	1.1、Spring
+
+​	spring是一个开源框架，spring是于2003年兴起的一个轻量级的Java开发框架。Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)的容器框架.
+
+### 	1.2、SpringMVC
+
+​	SpringMVC属于SpringFrameWork的后续产品，已经融合在Spring Web Flow里面。SpringMVC分离了控制器，模型对象，分派器以及处理程序对象的角色，这种分离让它们更容易进行定制。
+
+### 	1.3、MyBatis
+
+​	MyBatis本是apache的一个开源项目iBatis，2010年这个项目有apache software foundation 迁移到了 google code,并且改名为MyBatista。MyBatis是一个基于Java的持久层框架。IBATIS提供的持久层框架包括SQL  Maps和Data Access Objects(DAO)。MyBatis消除了几乎所有的JDBC代码和参数的手工设置以及结果集 的检索。MyBatista使用简单的XML或注解用于配置和原始映射，将接口和JAVA的POJOS(*Plain* Ordinary *Java* Objec  普通的java 对象)映射成数据库中的数据。
+
+## 2.开发环境
+
+首先说明一下版本
+
+- JDK1.8
+- Eclipse neno
+- Maven-3.3.9
+
+同时给出spring和mybatis的版本
+
+- spring 4.2.4.RELEASE
+- mybatis 3.2.5
+
+这里给出一个项目最后的目录结构
+
+![1](/img/springmvc/1.jpg)
+
+​	下面来详细介绍如何搭建SSM框架。
+
+## 3.Spring与Mybatisj集成
+
+### 3.1使用Maven引入相关的jar包
+
+​	为了方便后面配置不需要引入相关JAR包，在这里，直接给出所有需要的Jar包
+
+``` xml
+<properties>
+        <!-- 数据库相关版本 -->
+        <jdbc.driver.version>5.1.25</jdbc.driver.version>
+        <mybatis.version>3.2.5</mybatis.version>
+        <mybatis-spring.version>1.2.2</mybatis-spring.version>
+        <!-- spring版本 -->
+        <spring.version>4.2.4.RELEASE</spring.version>
+        <!-- encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- autoconfig -->
+        <autoconfig-plugin-version>1.2</autoconfig-plugin-version>
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <!-- Begin: 数据库依赖包 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis-spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${jdbc.driver.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- End: 数据库依赖包 -->
+
+        <!-- Begin: 日志依赖包 -->
+     <dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-api</artifactId>
+	    <version>1.7.21</version>
+	</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+        <!-- End: 日志依赖包 -->
+
+        <!-- Begin: aspectj相关jar包-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.7.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.7.4</version>
+        </dependency>
+        <!-- End: aspectj相关jar包-->
+
+        <!-- Begin: spring依赖 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- End: spring依赖 -->
+        
+		<!-- servlet 相关的包 -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.2.3</version>
+            <classifier>jdk15</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.5.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.4</version>
+        </dependency>
+	
+    </dependencies>
+  <build>
+    <finalName>webmvc</finalName>
+     <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+```
+
+### 3.2配置web.xml文件
+
+​	这里面对application.xml的引入配置以及配置springmvc-servlet的Servlet就是为了完成SSM整合。配置里有详细注释，不多解释了。
+
+​	web.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    id="schedule-console" version="3.0">
+    <!-- 配置 Spring -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+      <!--application.xml主要是spring和mybatis的集成-->
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- 配置springmvc -->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springmvc-servlet.xml</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+     <!--错误页面配置,这里只是简单的配置了一下 -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/main.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/main.jsp</location>
+    </error-page>
+</web-app>
+```
+
+### 3.3配置application.xml文件
+
+​	这个文件就是用来完成spring和mybatis的整合的。主要是自动扫描，自动注入，配置数据库。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 自动扫描 -->
+    <context:component-scan base-package="com.ssm.maven.core.dao"/>
+    <context:component-scan base-package="com.ssm.maven.core.service"/>
+    
+    <!-- 配置数据源 -->
+    <bean id="dataSource"
+     class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/db?useUnicode=true&amp;characterEncoding=UTF-8  "/>
+        <property name="username" value="root"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <!-- 配置mybatis的sqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 自动扫描mappers.xml文件 -->
+        <property name="mapperLocations" value="classpath:/mappers/*.xml"></property>
+        <!-- mybatis配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ssm.maven.core.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 配置事务通知属性 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- 定义事务传播属性 -->
+        <tx:attributes>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="upd*" propagation="REQUIRED"/>
+            <tx:method name="edit*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="new*" propagation="REQUIRED"/>
+            <tx:method name="set*" propagation="REQUIRED"/>
+            <tx:method name="remove*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="change*" propagation="REQUIRED"/>
+            <tx:method name="check*" propagation="REQUIRED"/>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="search*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="load*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="*" propagation="REQUIRED" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置事务切面 -->
+    <aop:config>
+        <aop:pointcut id="serviceOperation"
+                      expression="(execution(* com.ssm.maven.core.service.*.*(..)))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation"/>
+    </aop:config>
+</beans>
+```
+
+### 3.4配置springmvc-servlet.xml文件
+
+​	配置里面的注释也很详细，主要是自动扫描控制器，视图模式，注解的启动。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd  ">
+        
+        <!-- 使用注解的包，包括子集 ,自动扫描controller-->
+        <context:component-scan base-package="com.ssm.maven.core.admin"></context:component-scan>
+        
+        <!-- 视图解析器 -->       
+     <bean id="viewResolver"   class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+       <property name="prefix" value="/"></property>
+       <property name="suffix" value=".jsp"></property>
+       </bean>
+       <!-- 访问静态资源-->
+        <mvc:default-servlet-handler />
+        </beans>
+```
+
+### 3.5配置mybatis.xml文件
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--文档类型说明很重要，否则启动tomcat时会报错-->
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 别名 -->
+	<settings>
+	<setting name="logImpl" value="LOG4J"></setting>
+	</settings>
+	<typeAliases>
+		<package name="com.ssm.maven.core.entity"></package>
+	</typeAliases>
+</config
+```
+
+### 3.6配置log4j.properties
+
+```xml
+log4j.rootLogger=DEBUG, debug
+log4j.logger.com.ssm.maven.core.admin=INFO,admin
+
+log4j.logger.org.springframework=OFF 
+log4j.logger.org.mybatis.spring=ON
+log4j.logger.org.springframework.context.annotation=OFF 
+
+log4j.appender.admin=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.admin.layout=org.apache.log4j.PatternLayout   
+log4j.appender.admin.layout.ConversionPattern= [%d{HH\:mm\:ss}] %c{1} - %m%n   
+log4j.appender.admin.datePattern='.'yyyy-MM-dd   
+log4j.appender.admin.Threshold = INFO   
+log4j.appender.admin.append=true   
+log4j.appender.admin.File=${catalina.home}/logs/ssm-maven/admin.log
+  
+log4j.logger.debug=debug   
+log4j.appender.debug=org.apache.log4j.DailyRollingFileAppender   
+log4j.appender.debug.layout=org.apache.log4j.PatternLayout   
+log4j.appender.debug.layout.ConversionPattern= [%d{HH\:mm\:ss}] %c{1} - %m%n   
+log4j.appender.debug.datePattern='.'yyyy-MM-dd   
+log4j.appender.debug.Threshold = DEBUG   
+log4j.appender.debug.append=true   
+log4j.appender.debug.File=${catalina.home}/logs/ssm-maven/debug.log
+
+log4j.logger.java.sql.ResultSet=INFO  
+log4j.logger.org.apache=INFO  
+log4j.logger.java.sql.Connection=DEBUG  
+log4j.logger.java.sql.Statement=DEBUG  
+log4j.logger.java.sql.PreparedStatement=DEBUG  
+```
+
+​	至此，ssm集成配置文件就完成了，接下来我们要编写代码来实现我们的业务逻辑，这里我是在github看到的一个开源项目，照着项目上一点点实现的。项目地址[https://codeload.github.com/ZHENFENG13/ssm-demo/zip/master](https://codeload.github.com/ZHENFENG13/ssm-demo/zip/master).对学习ssm有借鉴意义。
+
+## 4.参考作者
+
+​	[SSM框架——详细整合教程（Spring+SpringMVC+MyBatis）](http://blog.csdn.net/zhshulin/article/details/37956105)

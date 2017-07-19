@@ -1,0 +1,182 @@
+---
+layout:     post
+title:      "SpringMVC入门"
+subtitle:   "Springmvc示例"
+date:       2017-02-22 12:00:00
+author:     "wwt"
+header-img: "img/bg/hello_world.jpg"
+tags:
+    - SpringMVC
+---
+
+本文主要介绍Springmvc的框架原理，并通过一个入门程序展示搭建环境，配置以及部署。
+
+## springmvc框架原理图
+
+![springmvc](/img/springmvc/0.png)
+
+ 组件及其作用
+
+- 前端控制器(DispatcherServlet):接收请求，响应结果，相当于转发器，中央处理器。减少了其他组件之间的耦合度。
+- 处理器映射器(HandlerMapping):根据请求的url查找的Handler.
+- Handler处理器:按照HndlerApdater的要求编写。
+- 处理器适配器(HandlerAdapter):按照特定规则(HandlerAdapter)要求的规则执行Handler。
+- 视图解析器(VIewResolver):进行视图解析，根据逻辑视图解析成真正的视图(view)。
+- 视图view是一个接口实现类试吃不同的View类型(jsp,pdf).
+
+步骤
+
+- 1.发起请求到前端控制器(`DispatcherServlet`)
+- 2.前端控制器请求处理器映射器(`HandlerMapping`)查找`Handler`(可根据xml配置、注解进行查找)
+- 3.处理器映射器(`HandlerMapping`)向前端控制器返回`Handler`
+- 4.前端控制器调用处理器适配器(`HandlerAdapter`)执行`Handler`
+- 5.处理器适配器(HandlerAdapter)去执行Handler
+- 6.Handler执行完，给适配器返回ModelAndView(Springmvc框架的一个底层对象)
+- 7.处理器适配器(`HandlerAdapter`)向前端控制器返回`ModelAndView`
+- 8.前端控制器(`DispatcherServlet`)请求视图解析器(`ViewResolver`)进行视图解析，根据逻辑视图名解析成真正的视图(jsp)
+- 9.视图解析器(ViewResolver)向前端控制器(`DispatcherServlet`)返回View
+- 10.前端控制器进行视图渲染，即将模型数据(在`ModelAndView`对象中)填充到request域
+- 11.前端控制器向用户响应结果
+
+## springmvc入门程序
+
+### 环境搭建
+
+搭建工具eclipse maven tomcat 
+
+在eclipse中新建一个maven web 项目
+
+![1](/img/springmvc/1.png)
+
+在pom.xml文件中添加依赖关系
+
+```xml
+<properties>
+    <spring.version>4.0.5.RELEASE</spring.version>
+ </properties>
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+      <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+     <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>3.1.0</version>
+   </dependency>
+   <build>
+    <finalName>SpringMVC</finalName>
+     <plugins>  
+        <plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-compiler-plugin</artifactId>  
+            <configuration>  
+                <source>1.8</source>  
+                <target>1.8</target>  
+            </configuration>  
+        </plugin>  
+        </plugins>
+```
+
+### 配置文件
+
+- 配置前端控制器
+
+web.xml
+
+```xml
+<servlet>
+        <servlet-name>SpringMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!--contextConfigLocation配置Springmvc加载的配置文件(配置处理器映射器，适配器等)
+    若不配置，默认加载WEB-INF/Servlet名称-servlet(这里是SpringMVC-Servlet.xml)
+    -->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpringMVC</servlet-name>
+        <!--/,所有访问的地址由DispatcherServlet进行解析，对静态文件的解析需要配置不让DispatcherServlet进行解析，
+            使用此种方式和实现RESTful风格的url-->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+```
+
+-  spring容器配置
+
+  如上配置会自动去WEB-INF下寻找'servlet-name'-servlet.xml
+
+```xml
+
+    <!-- 配置扫描的包 -->
+    <context:component-scan base-package="com.springdemo.*" />
+    <!-- 注册HandlerMapper、HandlerAdapter两个映射类 -->
+    <mvc:annotation-driven />
+    <!-- 访问静态资源 -->
+    <mvc:default-servlet-handler />
+    <!-- 视图解析器 classpath下要有jstl的jar包-->
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>      
+         <!--配置jsp路径的前缀-->
+        <property name="prefix" value="/WEB-INF/view/"></property>
+        <!--配置jsp路径的后缀-->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+```
+
+- 创建demojsp文件
+
+  ```jsp
+  <%@ page language="java" contentType="text/html; charset=UTF-8"
+      pageEncoding="UTF-8"%>
+  <html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>首页</title>
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
+  <body>
+  <h1>这里是SpringMVC Demo首页</h1>
+  <h3>出现此页面，说明配置成功。</h3>
+  <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+  <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+
+  <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+  </html>
+  ```
+
+
+- 创建Controller
+
+  ```java
+  @Controller
+  public class DemoController {
+      @RequestMapping("/index")
+      public String index(){
+          return "demo";
+      }
+  }
+  ```
+
+### 启动服务器
+
+启动服务器后，默认会访问服务器的根路径/，也就是访问根目录下的index.jsp页面。
+
+在根目录下有index.jsp，作为访问项目的入口。运行项目后，我们会看到以下运行结果。
+
+![2](/img/springmvc/2.PNG)
+
+点击"Hello World"链接后，页面跳转，当请求index时会映射到上述controller方法中，返回的字符串demo会被配置拼接成WEB-INF/view/demo.jsp,展示出来。
+
+![3](/img/springmvc/3.PNG)
+
+###  参考作者
+
+[http://brianway.github.io/](http://brianway.github.io/)
+

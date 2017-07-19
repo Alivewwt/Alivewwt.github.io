@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords"  content="">
+    
+    <title>Spring-SpringMVC-MyBatis - Wwt-blog</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://wuwt.me//2017/03/12/SSM-2017/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- font-awesome CSS -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Highlight CSS -->
+    <link rel="stylesheet" href="/css/googlecode.css">
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Wwt-blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">首页</a>
+                    </li>
+                    <li>
+                        <a href="/tags">标签</a>
+                    </li>
+                    <li>
+                        <a href="/about">关于</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/bg/ssm.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#SSM 框架集成" title="SSM 框架集成">SSM 框架集成</a>
+                        
+                    </div>
+                    <h1>Spring-SpringMVC-MyBatis</h1>
+                    
+                    
+                    <h2 class="subheading">SSM</h2>
+                    
+                    <span class="meta">Posted by Wwt on March 12, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p>​	上次我学习了一下SpringMVC ,并做了一个简单的示例程序。之后看到网上有很多ssm(springmvc,spring,maven)集成的学习示例，于是，我也打算自己动手集成ssm框架，加深一下理解。</p>
+
+<h2 id="section">1.基本概念</h2>
+
+<h3 id="spring">1.1、Spring</h3>
+
+<p>​	spring是一个开源框架，spring是于2003年兴起的一个轻量级的Java开发框架。Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)的容器框架.</p>
+
+<h3 id="springmvc">1.2、SpringMVC</h3>
+
+<p>​	SpringMVC属于SpringFrameWork的后续产品，已经融合在Spring Web Flow里面。SpringMVC分离了控制器，模型对象，分派器以及处理程序对象的角色，这种分离让它们更容易进行定制。</p>
+
+<h3 id="mybatis">1.3、MyBatis</h3>
+
+<p>​	MyBatis本是apache的一个开源项目iBatis，2010年这个项目有apache software foundation 迁移到了 google code,并且改名为MyBatista。MyBatis是一个基于Java的持久层框架。IBATIS提供的持久层框架包括SQL  Maps和Data Access Objects(DAO)。MyBatis消除了几乎所有的JDBC代码和参数的手工设置以及结果集 的检索。MyBatista使用简单的XML或注解用于配置和原始映射，将接口和JAVA的POJOS(<em>Plain</em> Ordinary <em>Java</em> Objec  普通的java 对象)映射成数据库中的数据。</p>
+
+<h2 id="section-1">2.开发环境</h2>
+
+<p>首先说明一下版本</p>
+
+<ul>
+  <li>JDK1.8</li>
+  <li>Eclipse neno</li>
+  <li>Maven-3.3.9</li>
+</ul>
+
+<p>同时给出spring和mybatis的版本</p>
+
+<ul>
+  <li>spring 4.2.4.RELEASE</li>
+  <li>mybatis 3.2.5</li>
+</ul>
+
+<p>这里给出一个项目最后的目录结构</p>
+
+<p><img src="/img/springmvc/1.jpg" alt="1" /></p>
+
+<p>​	下面来详细介绍如何搭建SSM框架。</p>
+
+<h2 id="springmybatisj">3.Spring与Mybatisj集成</h2>
+
+<h3 id="mavenjar">3.1使用Maven引入相关的jar包</h3>
+
+<p>​	为了方便后面配置不需要引入相关JAR包，在这里，直接给出所有需要的Jar包</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;properties&gt;</span>
+        <span class="c">&lt;!-- 数据库相关版本 --&gt;</span>
+        <span class="nt">&lt;jdbc.driver.version&gt;</span>5.1.25<span class="nt">&lt;/jdbc.driver.version&gt;</span>
+        <span class="nt">&lt;mybatis.version&gt;</span>3.2.5<span class="nt">&lt;/mybatis.version&gt;</span>
+        <span class="nt">&lt;mybatis-spring.version&gt;</span>1.2.2<span class="nt">&lt;/mybatis-spring.version&gt;</span>
+        <span class="c">&lt;!-- spring版本 --&gt;</span>
+        <span class="nt">&lt;spring.version&gt;</span>4.2.4.RELEASE<span class="nt">&lt;/spring.version&gt;</span>
+        <span class="c">&lt;!-- encoding --&gt;</span>
+        <span class="nt">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="nt">&lt;/project.build.sourceEncoding&gt;</span>
+        <span class="c">&lt;!-- autoconfig --&gt;</span>
+        <span class="nt">&lt;autoconfig-plugin-version&gt;</span>1.2<span class="nt">&lt;/autoconfig-plugin-version&gt;</span>
+        <span class="nt">&lt;maven.test.skip&gt;</span>true<span class="nt">&lt;/maven.test.skip&gt;</span>
+    <span class="nt">&lt;/properties&gt;</span>
+
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>spring-test<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-logging<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-logging<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.1.3<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-collections<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-collections<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.2.1<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-io<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-io<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.4<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-lang<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-lang<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.6<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+
+        <span class="c">&lt;!-- Begin: 数据库依赖包 --&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.mybatis<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>mybatis<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${mybatis.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.mybatis<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>mybatis-spring<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${mybatis-spring.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>mysql<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>mysql-connector-java<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${jdbc.driver.version}<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="c">&lt;!-- End: 数据库依赖包 --&gt;</span>
+
+        <span class="c">&lt;!-- Begin: 日志依赖包 --&gt;</span>
+     <span class="nt">&lt;dependency&gt;</span>
+	    <span class="nt">&lt;groupId&gt;</span>org.slf4j<span class="nt">&lt;/groupId&gt;</span>
+	    <span class="nt">&lt;artifactId&gt;</span>slf4j-api<span class="nt">&lt;/artifactId&gt;</span>
+	    <span class="nt">&lt;version&gt;</span>1.7.21<span class="nt">&lt;/version&gt;</span>
+	<span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.slf4j<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>slf4j-log4j12<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.7.7<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>log4j<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>log4j<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.2.16<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="c">&lt;!-- End: 日志依赖包 --&gt;</span>
+
+        <span class="c">&lt;!-- Begin: aspectj相关jar包--&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.aspectj<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>aspectjrt<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.7.4<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.aspectj<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>aspectjweaver<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.7.4<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="c">&lt;!-- End: aspectj相关jar包--&gt;</span>
+
+        <span class="c">&lt;!-- Begin: spring依赖 --&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>spring-context-support<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>spring-jdbc<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>spring-tx<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.springframework<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>spring-webmvc<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${spring.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="c">&lt;!-- End: spring依赖 --&gt;</span>
+        
+		<span class="c">&lt;!-- servlet 相关的包 --&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>javax.servlet<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>javax.servlet-api<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>3.1.0<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>javax.servlet.jsp<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>jsp-api<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.2<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>javax.servlet<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>jstl<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.2<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>net.sf.json-lib<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>json-lib<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.2.3<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;classifier&gt;</span>jdk15<span class="nt">&lt;/classifier&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>com.fasterxml.jackson.core<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>jackson-databind<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>2.5.3<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>com.alibaba<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>fastjson<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.2.4<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>commons-codec<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>commons-codec<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>1.4<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+	
+    <span class="nt">&lt;/dependencies&gt;</span>
+  <span class="nt">&lt;build&gt;</span>
+    <span class="nt">&lt;finalName&gt;</span>webmvc<span class="nt">&lt;/finalName&gt;</span>
+     <span class="nt">&lt;plugins&gt;</span>
+        <span class="nt">&lt;plugin&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;configuration&gt;</span>
+                <span class="nt">&lt;source&gt;</span>1.8<span class="nt">&lt;/source&gt;</span>
+                <span class="nt">&lt;target&gt;</span>1.8<span class="nt">&lt;/target&gt;</span>
+            <span class="nt">&lt;/configuration&gt;</span>
+        <span class="nt">&lt;/plugin&gt;</span>
+    <span class="nt">&lt;/plugins&gt;</span>
+  <span class="nt">&lt;/build&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="webxml">3.2配置web.xml文件</h3>
+
+<p>​	这里面对application.xml的引入配置以及配置springmvc-servlet的Servlet就是为了完成SSM整合。配置里有详细注释，不多解释了。</p>
+
+<p>​	web.xml</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;web-app</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="na">xmlns=</span><span class="s">"http://java.sun.com/xml/ns/javaee"</span>
+    <span class="na">xsi:schemaLocation=</span><span class="s">"http://java.sun.com/xml/ns/javaee</span>
+     <span class="err">http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"</span>
+    <span class="na">id=</span><span class="s">"schedule-console"</span> <span class="na">version=</span><span class="s">"3.0"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- 配置 Spring --&gt;</span>
+    <span class="nt">&lt;context-param&gt;</span>
+        <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+      <span class="c">&lt;!--application.xml主要是spring和mybatis的集成--&gt;</span>
+        <span class="nt">&lt;param-value&gt;</span>classpath:applicationContext.xml<span class="nt">&lt;/param-value&gt;</span>
+    <span class="nt">&lt;/context-param&gt;</span>
+    <span class="nt">&lt;listener&gt;</span>
+        <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
+    <span class="nt">&lt;/listener&gt;</span>
+    <span class="c">&lt;!-- 配置springmvc --&gt;</span>
+    <span class="nt">&lt;servlet&gt;</span>
+        <span class="nt">&lt;servlet-name&gt;</span>springmvc<span class="nt">&lt;/servlet-name&gt;</span>
+        <span class="nt">&lt;servlet-class&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="nt">&lt;/servlet-class&gt;</span>
+        <span class="nt">&lt;init-param&gt;</span>
+            <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+            <span class="nt">&lt;param-value&gt;</span>classpath:springmvc-servlet.xml<span class="nt">&lt;/param-value&gt;</span>
+        <span class="nt">&lt;/init-param&gt;</span>
+    <span class="nt">&lt;/servlet&gt;</span>
+    <span class="nt">&lt;servlet-mapping&gt;</span>
+        <span class="nt">&lt;servlet-name&gt;</span>springmvc<span class="nt">&lt;/servlet-name&gt;</span>
+        <span class="nt">&lt;url-pattern&gt;</span>/<span class="nt">&lt;/url-pattern&gt;</span>
+    <span class="nt">&lt;/servlet-mapping&gt;</span>
+    <span class="nt">&lt;welcome-file-list&gt;</span>
+        <span class="nt">&lt;welcome-file&gt;</span>index.html<span class="nt">&lt;/welcome-file&gt;</span>
+    <span class="nt">&lt;/welcome-file-list&gt;</span>
+     <span class="c">&lt;!--错误页面配置,这里只是简单的配置了一下 --&gt;</span>
+    <span class="nt">&lt;error-page&gt;</span>
+        <span class="nt">&lt;error-code&gt;</span>404<span class="nt">&lt;/error-code&gt;</span>
+        <span class="nt">&lt;location&gt;</span>/main.jsp<span class="nt">&lt;/location&gt;</span>
+    <span class="nt">&lt;/error-page&gt;</span>
+
+    <span class="nt">&lt;error-page&gt;</span>
+        <span class="nt">&lt;error-code&gt;</span>500<span class="nt">&lt;/error-code&gt;</span>
+        <span class="nt">&lt;location&gt;</span>/main.jsp<span class="nt">&lt;/location&gt;</span>
+    <span class="nt">&lt;/error-page&gt;</span>
+<span class="nt">&lt;/web-app&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="applicationxml">3.3配置application.xml文件</h3>
+
+<p>​	这个文件就是用来完成spring和mybatis的整合的。主要是自动扫描，自动注入，配置数据库。</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:aop=</span><span class="s">"http://www.springframework.org/schema/aop"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xmlns:tx=</span><span class="s">"http://www.springframework.org/schema/tx"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/aop</span> <span class="err">http://www.springframework.org/schema/aop/spring-aop-4.0.xsd</span>
+        <span class="err">http://www.springframework.org/schema/beans</span> <span class="err">http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+        <span class="err">http://www.springframework.org/schema/context</span> <span class="err">http://www.springframework.org/schema/context/spring-context.xsd</span>
+		<span class="err">http://www.springframework.org/schema/tx</span> <span class="err">http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- 自动扫描 --&gt;</span>
+    <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.ssm.maven.core.dao"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.ssm.maven.core.service"</span><span class="nt">/&gt;</span>
+    
+    <span class="c">&lt;!-- 配置数据源 --&gt;</span>
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"dataSource"</span>
+     <span class="na">class=</span><span class="s">"org.springframework.jdbc.datasource.DriverManagerDataSource"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"driverClassName"</span> <span class="na">value=</span><span class="s">"com.mysql.jdbc.Driver"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"url"</span>
+                  <span class="na">value=</span><span class="s">"jdbc:mysql://localhost:3306/db?useUnicode=true&amp;amp;characterEncoding=UTF-8  "</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">value=</span><span class="s">"root"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"password"</span> <span class="na">value=</span><span class="s">""</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="c">&lt;!-- 配置mybatis的sqlSessionFactory --&gt;</span>
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"sqlSessionFactory"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.SqlSessionFactoryBean"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span><span class="nt">/&gt;</span>
+        <span class="c">&lt;!-- 自动扫描mappers.xml文件 --&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperLocations"</span> <span class="na">value=</span><span class="s">"classpath:/mappers/*.xml"</span><span class="nt">&gt;&lt;/property&gt;</span>
+        <span class="c">&lt;!-- mybatis配置文件 --&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"configLocation"</span> <span class="na">value=</span><span class="s">"classpath:mybatis-config.xml"</span><span class="nt">&gt;&lt;/property&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="c">&lt;!-- DAO接口所在包名，Spring会自动查找其下的类 --&gt;</span>
+    <span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperScannerConfigurer"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"basePackage"</span> <span class="na">value=</span><span class="s">"com.ssm.maven.core.dao"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactoryBeanName"</span> <span class="na">value=</span><span class="s">"sqlSessionFactory"</span><span class="nt">&gt;&lt;/property&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="c">&lt;!-- (事务管理)transaction manager, use JtaTransactionManager for global tx --&gt;</span>
+    <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"transactionManager"</span>  <span class="na">class=</span><span class="s">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"dataSource"</span> <span class="na">ref=</span><span class="s">"dataSource"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/bean&gt;</span>
+
+    <span class="c">&lt;!-- 配置事务通知属性 --&gt;</span>
+    <span class="nt">&lt;tx:advice</span> <span class="na">id=</span><span class="s">"txAdvice"</span> <span class="na">transaction-manager=</span><span class="s">"transactionManager"</span><span class="nt">&gt;</span>
+        <span class="c">&lt;!-- 定义事务传播属性 --&gt;</span>
+        <span class="nt">&lt;tx:attributes&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"insert*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"update*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"upd*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"edit*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"save*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"add*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"new*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"set*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"remove*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"delete*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"del*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"change*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"check*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"get*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span> <span class="na">read-only=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"search*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span> <span class="na">read-only=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"find*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span> <span class="na">read-only=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"load*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span> <span class="na">read-only=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;tx:method</span> <span class="na">name=</span><span class="s">"*"</span> <span class="na">propagation=</span><span class="s">"REQUIRED"</span> <span class="na">read-only=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/tx:attributes&gt;</span>
+    <span class="nt">&lt;/tx:advice&gt;</span>
+
+    <span class="c">&lt;!-- 配置事务切面 --&gt;</span>
+    <span class="nt">&lt;aop:config&gt;</span>
+        <span class="nt">&lt;aop:pointcut</span> <span class="na">id=</span><span class="s">"serviceOperation"</span>
+                      <span class="na">expression=</span><span class="s">"(execution(* com.ssm.maven.core.service.*.*(..)))"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;aop:advisor</span> <span class="na">advice-ref=</span><span class="s">"txAdvice"</span> <span class="na">pointcut-ref=</span><span class="s">"serviceOperation"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/aop:config&gt;</span>
+<span class="nt">&lt;/beans&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="springmvc-servletxml">3.4配置springmvc-servlet.xml文件</h3>
+
+<p>​	配置里面的注释也很详细，主要是自动扫描控制器，视图模式，注解的启动。</p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+       <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="na">xmlns:context=</span><span class="s">"http://www.springframework.org/schema/context"</span>
+       <span class="na">xmlns:mvc=</span><span class="s">"http://www.springframework.org/schema/mvc"</span>
+       <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans</span> 
+       <span class="err">http://www.springframework.org/schema/beans/spring-beans-4.0.xsd</span>
+        <span class="err">http://www.springframework.org/schema/context</span> 
+        <span class="err">http://www.springframework.org/schema/context/spring-context-4.0.xsd</span>
+        <span class="err">http://www.springframework.org/schema/mvc</span> 
+        <span class="err">http://www.springframework.org/schema/mvc/spring-mvc.xsd</span>  <span class="err">"</span><span class="nt">&gt;</span>
+        
+        <span class="c">&lt;!-- 使用注解的包，包括子集 ,自动扫描controller--&gt;</span>
+        <span class="nt">&lt;context:component-scan</span> <span class="na">base-package=</span><span class="s">"com.ssm.maven.core.admin"</span><span class="nt">&gt;&lt;/context:component-scan&gt;</span>
+        
+        <span class="c">&lt;!-- 视图解析器 --&gt;</span>       
+     <span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"viewResolver"</span>   <span class="na">class=</span><span class="s">"org.springframework.web.servlet.view.InternalResourceViewResolver"</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"prefix"</span> <span class="na">value=</span><span class="s">"/"</span><span class="nt">&gt;&lt;/property&gt;</span>
+       <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"suffix"</span> <span class="na">value=</span><span class="s">".jsp"</span><span class="nt">&gt;&lt;/property&gt;</span>
+       <span class="nt">&lt;/bean&gt;</span>
+       <span class="c">&lt;!-- 访问静态资源--&gt;</span>
+        <span class="nt">&lt;mvc:default-servlet-handler</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/beans&gt;</span>
+</code></pre>
+</div>
+
+<h3 id="mybatisxml">3.5配置mybatis.xml文件</h3>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="c">&lt;!--文档类型说明很重要，否则启动tomcat时会报错--&gt;</span>
+<span class="cp">&lt;!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</span>
+<span class="nt">&lt;configuration&gt;</span>
+	<span class="c">&lt;!-- 别名 --&gt;</span>
+	<span class="nt">&lt;settings&gt;</span>
+	<span class="nt">&lt;setting</span> <span class="na">name=</span><span class="s">"logImpl"</span> <span class="na">value=</span><span class="s">"LOG4J"</span><span class="nt">&gt;&lt;/setting&gt;</span>
+	<span class="nt">&lt;/settings&gt;</span>
+	<span class="nt">&lt;typeAliases&gt;</span>
+		<span class="nt">&lt;package</span> <span class="na">name=</span><span class="s">"com.ssm.maven.core.entity"</span><span class="nt">&gt;&lt;/package&gt;</span>
+	<span class="nt">&lt;/typeAliases&gt;</span>
+<span class="err">&lt;</span>/config
+</code></pre>
+</div>
+
+<h3 id="log4jproperties">3.6配置log4j.properties</h3>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>log4j.rootLogger=DEBUG, debug
+log4j.logger.com.ssm.maven.core.admin=INFO,admin
+
+log4j.logger.org.springframework=OFF 
+log4j.logger.org.mybatis.spring=ON
+log4j.logger.org.springframework.context.annotation=OFF 
+
+log4j.appender.admin=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.admin.layout=org.apache.log4j.PatternLayout   
+log4j.appender.admin.layout.ConversionPattern= [%d{HH\:mm\:ss}] %c{1} - %m%n   
+log4j.appender.admin.datePattern='.'yyyy-MM-dd   
+log4j.appender.admin.Threshold = INFO   
+log4j.appender.admin.append=true   
+log4j.appender.admin.File=${catalina.home}/logs/ssm-maven/admin.log
+  
+log4j.logger.debug=debug   
+log4j.appender.debug=org.apache.log4j.DailyRollingFileAppender   
+log4j.appender.debug.layout=org.apache.log4j.PatternLayout   
+log4j.appender.debug.layout.ConversionPattern= [%d{HH\:mm\:ss}] %c{1} - %m%n   
+log4j.appender.debug.datePattern='.'yyyy-MM-dd   
+log4j.appender.debug.Threshold = DEBUG   
+log4j.appender.debug.append=true   
+log4j.appender.debug.File=${catalina.home}/logs/ssm-maven/debug.log
+
+log4j.logger.java.sql.ResultSet=INFO  
+log4j.logger.org.apache=INFO  
+log4j.logger.java.sql.Connection=DEBUG  
+log4j.logger.java.sql.Statement=DEBUG  
+log4j.logger.java.sql.PreparedStatement=DEBUG  
+</code></pre>
+</div>
+
+<p>​	至此，ssm集成配置文件就完成了，接下来我们要编写代码来实现我们的业务逻辑，这里我是在github看到的一个开源项目，照着项目上一点点实现的。项目地址<a href="https://codeload.github.com/ZHENFENG13/ssm-demo/zip/master">https://codeload.github.com/ZHENFENG13/ssm-demo/zip/master</a>.对学习ssm有借鉴意义。</p>
+
+<h2 id="section-2">4.参考作者</h2>
+
+<p>​	<a href="http://blog.csdn.net/zhshulin/article/details/37956105">SSM框架——详细整合教程（Spring+SpringMVC+MyBatis）</a></p>
+
+
+                <hr style="visibility: hidden;">
+
+                <!-- Baidu Share -->
+                
+                <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more">分享到：</a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网">豆瓣网</a></div>
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/03/04/machine-learing-2017/" data-toggle="tooltip" data-placement="top" title="贝叶斯分类器">前一篇<br>
+                        <span>贝叶斯分类器</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/03/14/Nerual-NetWork-2017/" data-toggle="tooltip" data-placement="top" title="神经网络">后一篇<br>
+                        <span>神经网络</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+                <hr>
+
+                <!-- Netease Gentie -->
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            </div>
+        </div>
+    </div>
+</article>
+
+
+<!-- Baidu Share -->
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/ling-du-qing-xu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/3537251257">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Alivewwt">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Wwt-blog 2017
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" async
+  src="http://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- Highlight.js -->
+<script>
+    async("http://cdn.bootcss.com/highlight.js/9.9.0/highlight.min.js", function(){
+        hljs.initHighlightingOnLoad();
+    })
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Baidu Push-->
+<script>
+    // do not push in tag.html
+    if($('#tag_cloud').length == 0){
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    }
+</script>
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '07529a93af5fa9f808261a1318c3aba4';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- Side Catalog -->
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.jpg" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
