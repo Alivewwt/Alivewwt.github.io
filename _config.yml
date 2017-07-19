@@ -5,7 +5,7 @@ header-img: img/bg/bg_index.jpg
 email: m13032536099@163.com
 description: ""
 keyword: ""
-url: "http://wuwt.me/"              # your host, for absolute URL
+url: "https://alivewwt.github.io/"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 # SNS settings
