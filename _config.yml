@@ -46,7 +46,7 @@ ba_track_id: 07529a93af5fa9f808261a1318c3aba4
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "专于业专于代码，乐于分享"
+sidebar-about-description: "业精于勤荒于嬉,乐于分享"
 sidebar-avatar: /img/avatar-wwt.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
