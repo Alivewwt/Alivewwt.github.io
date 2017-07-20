@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Keras入门"
+title:      "Keras入门-上篇"
 subtitle:   "Keras"
 date:       2017-07-17 11:00:00
 author:     "Wwt"
@@ -278,6 +278,95 @@ model.fit(x_train, y_train,
           batch_size=128)
 score = model.evaluate(x_test, y_test, batch_size=128)
 ```
+
+#### 序贯模型API
+
+**常用Sequential属性**
+
+- model.layers是添加到模型上层的list
+
+##### Sequentaial模型方法
+
+###### add
+
+```python
+add(self,layer)
+```
+
+向模型中添加一个层
+
+- layer:Layer对象
+
+###### pop
+
+```python
+pop(self)
+```
+
+弹出模型的最后一层，无返回值
+
+###### compile
+
+```python
+compile(self, optimizer, loss, metrics=None, sample_weight_mode=None)
+```
+
+编译用来来配置模型的学习过程，其参数有
+
+- optimizer:：字符串（预定义优化器名）或优化器对象
+- loss：字符串（预定义损失函数名）或目标函数
+- metrics：列表，包含评估模型在训练和测试时的网络性能的指标，典型用法是`metrics=['accuracy']`
+- sample_weight_mode：如果你需要按时间步为样本赋权（2D权矩阵），将该值设为“temporal”。默认为“None”，代表按样本赋权（1D权）。在下面`fit`函数的解释中有相关的参考内容。
+- kwargs：使用TensorFlow作为后端请忽略该参数，若使用Theano作为后端，kwargs的值将会传递给 K.function
+
+```python
+model = Sequential()
+model.add(Dense(32, input_shape=(500,)))
+model.add(Dense(10, activation='softmax'))
+model.compile(optimizer='rmsprop',
+      loss='categorical_crossentropy',
+      metrics=['accuracy'])
+```
+
+模型在使用前必须编译，否则在调用fit或evaluate时会抛出异常。
+
+###### fit
+
+```python
+fit(self, x, y, batch_size=32, epochs=10, verbose=1)
+```
+
+本函数将模型训练nb_epoch轮，其参数有：
+
+- x：输入数据。如果模型只有一个输入，那么x的类型是numpy array，如果模型有多个输入，那么x的类型应当为list，list的元素是对应于各个输入的numpy array
+- y：标签，numpy array
+- batch_size：整数，指定进行梯度下降时每个batch包含的样本数。训练时一个batch的样本会被计算一次梯度下降，使目标函数优化一步。
+- epochs：整数，训练的轮数，每个epoch会把训练集轮一遍。
+- verbose：日志显示，0为不在标准输出流输出日志信息，1为输出进度条记录，2为每个epoch输出一行记录
+
+###### evaluate
+
+```python
+evaluate(self, x, y, batch_size=32, verbose=1, sample_weight=None)
+```
+
+本函数按batch计算在某些输入数据上模型的误差，其参数有：
+
+- x：输入数据，与**fit**一样，是numpy array或numpy array的list
+- y：标签，numpy array
+- batch_size：整数，含义同**fit**的同名参数
+- verbose：含义同**fit**的同名参数，但只能取0或1
+- sample_weight：numpy array，含义同**fit**的同名参数
+
+###### predict
+
+```python
+predict(self, x, batch_size=32, verbose=0)
+```
+
+本函数按batch获得输入数据对应的输出，其参数有：
+
+函数的返回值的预测值的numpy array。
 
 ### 函数式(Functional)模型
 
