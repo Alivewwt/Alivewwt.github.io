@@ -9,7 +9,7 @@ catalog: true
 tags:   
     - Keras
     - 神经网络框架
-    - 深度学习
+    - 网络层
 ---
 ### Keras的网络层
 
