@@ -216,6 +216,8 @@ embedding_layer = Embedding(len(word_index) + 1,
 
 [2]: Schnabel T, Labutov I, Mimno D, et al. Evaluation methods for unsupervised word embeddings[C]//Proc. of EMNLP. 2015
 
+
+
 >文章转载自《<http://blog.keras.io/using-pre-trained-word-embeddings-in-a-keras-model.html>》作者 Francois Chollet
 
 
