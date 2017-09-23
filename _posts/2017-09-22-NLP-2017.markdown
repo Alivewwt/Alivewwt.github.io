@@ -22,7 +22,7 @@ tags:
 3. NLP中CNN的常用超参数设置都有哪些？
 4. CNN在NLP的研究还可以从哪个方向进行？
 
-### 输入
+### 输入什么
 
 首先，针对第1个问题，NLP中的CNN的输入可以是什么？其实，任何矩阵都可以作为CNN的输入，关键是采用什么样的方法。如果你使用one-hot represention，那其实就是0-gram，这样输入的矩阵大小肯定也是固定的(整个词表的长度)；如果采用Word2Vec，那么每一行代表一个词，文档中有多少个词，就有多少行。**词向量**其实就是神经语言概率模型的一个副产品，不过可以反映出词语的语义信息。word embedding 技术，主要分为两种思想，Hierarchical Softmax和Negative Sampling两种，其中每种思想下又分为两种方法，CBow模型和Skip-Gram模型。这里需要注意的是，word2vec一般通过pre-training的方式获得，比如google的word2vec就是从大量的文本预训练得到的。你在CNN中使用Word2Vec，可以按照static和non-static两种方式，如果是non-static的话，则表明你在训练CNN的时候，需要对使用的word2vec做一个轻微的调整。word2vec可以算是CNN进行NLP应用时候的标配。
 
