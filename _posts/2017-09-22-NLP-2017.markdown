@@ -1,0 +1,86 @@
+---
+layout:     post
+title:      "CNN在自然语言处理中的应用"
+subtitle:   "CNN"
+date:       2017-09-22 11:00:00
+author:     "Wwt"
+header-img: "img/CNN_1/bg.jpg"
+catalog: true
+tags:   
+    - CNN
+    - 深度学习
+    - 自然语言处理
+---
+卷积神经网络(CNN)在数字图像处理领域取得了巨大的成功，从而掀起了深度学习在自然语言领域(Natural Language Processing ,NLP)的狂潮。这里我们主要对目前的研究现状做一个简单的总结。由于我在NLP上应用深度学习的时间较短，所以总结或有遗漏，望轻喷！！！
+
+### CNN 在自然语言处理中的应用
+
+卷积神经网络在自然语言处理中如何应用？主要从以下4个问题阐述：
+
+1. 在NLP中的CNN的输入可以是什么？
+2. 如果输入是词向量，每一行代表一个词，那么如何解决不同的文本长度不统一的问题？
+3. NLP中CNN的常用超参数设置都有哪些？
+4. CNN在NLP的研究还可以从哪个方向进行？
+
+首先，针对第1个问题，NLP中的CNN的输入可以是什么？其实，任何矩阵都可以作为CNN的输入，关键是采用什么样的方法。如果你使用one-hot represention，那其实就是0-gram，这样输入的矩阵大小肯定也是固定的(整个词表的长度)；如果采用Word2Vec，那么每一行代表一个词，文档中有多少个词，就有多少行。**词向量**其实就是神经语言概率模型的一个副产品，不过可以反映出词语的语义信息。word embedding 技术，主要分为两种思想，Hierarchical Softmax和Negative Sampling两种，其中每种思想下又分为两种方法，CBow模型和Skip-Gram模型。这里需要注意的是，word2vec一般通过pre-training的方式获得，比如google的word2vec就是从大量的文本预训练得到的。你在CNN中使用Word2Vec，可以按照static和non-static两种方式，如果是non-static的话，则表明你在训练CNN的时候，需要对使用的word2vec做一个轻微的调整。word2vec可以算是CNN进行NLP应用时候的标配。
+
+针对第2个问题，如何解决不同的文本长度不统一的问题？这是一个非常显然的问题，在LeNet-5中，每个输入都是32*32的图像文件，这样我们才能设置固定大小和数量的filters，如果图像的分辨率发生了变化，那么就会造成多余的卷积操作结果丢失，从而对模型结果产生影响，或者会使得网络内部状态发生混乱。在图像处理中，可以通过固定输入的图像的分辨率来解决，但是在自然语言处理中，由于输入的是文档或句子，而输入长度是不固定的，那么如何解决这个问题？其实，在NLP中，研究人员一般都采用的是“单层CNN结构”，这里的单层并不是只有一层，而是只有一对卷积层和池化层。我们来看NYU的Yoon做的用**CNN解决句子分类问题**。该论文的代码地址[Yoon kim的github](https://github.com/yoonkim/CNN_sentence)。![1](/img/CNN_1/1.png)
+
+可以看到，每次在卷积的时候，都是整行的进行。这好比是n-gram模型，如果每两行卷积一次，那就是2-gram，实际上，google最多也不过使用了5-gram模型，因为这种模型计算量非常大，但是如果在CNN中进行类似的操作，计算量反而减小了。在第二层的卷积层中，我们可以看到，每次得到的Feature Map的行数，是和输入的句子的长度相关。但是，在池化层，采用了1-max pooling的技术，从而将每个Feature Map的维度将为1，因此，pooling结束后，得到的向量维度，就是卷积层Feature Map的数量。这样也便解决了输入长度的问题，但是，接下来无法在进行卷积操作。
+
+![2](/img/CNN_1/2.png)
+
+针对第3个问题，CNN在应用的时候，超参数如何设定？下面我们从几个方面进行阐述。首先是Filter Window的大小。由于在卷积的时候是整行卷积的，因此只需要确定每次卷积的行数即可，而这个行数，其实就是n-gram模型中的n。一般来讲，n一般按照2,3,4这样来取值，这也和n-gram模型中n的取值相照应；当然，在文献[3]还详细分析了Filter Window大小对实验结果的影响，并且一直取到7；其次是feature map 的数量，在文献[2]中，针对2,3,4每一个Filter Window都设置了100个，这样经过池化层之后，得到的向量是300维的；还有一些其他的超参数，比如为了防止过拟合，在全连接层加入了DropOut，从而随机地舍弃了一部分连接，DropOut的参数为0.5；在 softma分类时使用L2正则项，正则项的系数是3.另外一个问题是，当训练的word embedding 不足时，也就是待分类的document中包含没有被pre-training 出来的词时，需要在某个区间上，对该词的词向量进行随机的初始化。
+
+针对第4个问题，CNN在NLP的研究方向还可以从哪些地方进行？首先，我们来简要列举2015年CNN在NLP的应用研究列表。
+
+- 扩展CNN的输入，扩充词向量的维度，加入新特征，例如加入位置，实体等特征。
+
+  ![3](/img/CNN_1/3.png)
+
+- 卷积层的改造。如将word2vec横向组合，以发现句子层级的特征；
+
+  ![2](/img/CNN_1/2.png)
+
+- Pooling层的改造。使用K-Max pooling以保留更多的特征,使用分段Pooling
+
+  ![4](/img/CNN_1/4.png)
+
+![7](/img/CNN_1/7.png)
+
+CNN中采用MaxPooling操作有几个好处：首先，这个操作可以保证特征的位置与旋转不变性，因为不论这个强特征在那个位置出现，都会不考虑其出现位置而能把它提取出来。对于图像处理来说这种位置与旋转不变性是很好的特性，但是对于NLP来说，这个特性其实并不一定是好事，因为在很多NLP的应用场合，特征的出现位置信息也很重要的，比如主语出现位置一般在巨头，宾语一般出现在句子尾等等，这些位置信息其实有时候对于分类任务来说还是很重要的，但是Max Pooling基本把这些信息抛掉了。
+
+其实，MaxPooling能减少模型参数数量，有利于减少模型过拟合问题。因为经过pooling操作后，往往把2D或者1D的数组转换为单一数组，这样对于后续的卷积层或者全连接隐层来说无疑单个Filter的参数或者隐层神经单元个数就减少了。
+
+再者，对于NLP任务来说，MaxPooling有个额外的好处；在此处，可以把变长的输入整理成固定长度的输入。因为CNN 最后往往会接全连接层，而神经元个数是需要事先定好的，如过输入是不定长的那么很难设计网络结构。前面说过，CNN模型的输入X长度是不确定的，而通过Pooling操作，每个Filter固定取1个值，那么有多少个Filter，Poolin层就有多少个神经元，这样就可以把全连接层神经元个数固定住(如下图所示)，这个优点也是很重要。
+
+![5](/img/CNN_1/5.png)
+
+K-MaxPooling的意思是：原先的Max Pooling Over Time从卷积层一系列特征值中只取最强的那个值，那么我们思路可以扩展一下，K-MaxPooling可以取所有特征值中得分在Top-K的值，并保留这些特征值原始的先后顺序(如下图所示)，就是说通过多保留一些特征信息提供后续阶段使用。
+
+![6](/img/CNN_1/6.png)
+
+很明显，K-Max Pooling可以表达同一类特征出现多次的情形，即可以表达某类特征的强度；另外，因为这些Top K特征值的相对顺序得意保留，所以应该说其保留了部分位置信息，但是这种位置信息只是特征间的相对顺序，而非绝对位置信息.
+
+分段MaxPooling的思想是：把某个Filter对应的卷积层的所有特征向量进行分段，切割成若干段后，在每个分段里面各自取得一个最大特征值，比如将某个Filter的特征向量切成3个块，那么就在每个块里面取一个最大值，于是获得3个特征值。![8](/img/CNN_1/8.png)
+
+K-Max Pooling是一种全局取Top K特征的操作方式，而 块(chunk)-Max Pooling则是先分段，在分担内包含特征数据里面取最大值，所以其实是一中局部Top K的特征抽取方式。
+
+Event Extraction via Dynamic Multi-Pooling Convolutional Neural Networks这篇论文提出的是一种ChunkPooling的变体，就是上面说的动态Chunk-Max Pooling的思路，实验证明性能有提升。
+
+### 参考
+
+1 A neural probabilistic language model, Yoshua, Ducharme et al.
+
+2 Yoon Kim. Convolutional Neural Networks for Sentence Classification.
+
+3 Zhang Ye, et al. A Sensitivity Analysis of (and Practitioners' Guide to) Convolutional Neural Networks for Sentence Classification.
+
+[4 卷积神经网络CNN在自然语言处理中的应用](http://www.cnblogs.com/yelbosh/p/5808706.html)
+
+[5 自然语言处理中CNN模型几种常见的Max Pooling操作](http://blog.csdn.net/malefactor/article/details/51078135)
+
+
+
+
+
