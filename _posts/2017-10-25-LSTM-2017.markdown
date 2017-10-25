@@ -159,5 +159,5 @@ LSTM是我们在RNN中获得的重要成功。自然地，我们也会考虑：�
 
 
 
->文章译自 [Understanding LSTM Networks]<http://colah.github.io/posts/2015-08-Understanding-LSTMs/> 作者colah
+>文章译自 [Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs) 作者colah
 
