@@ -1,0 +1,231 @@
+---
+layout:     post
+title:      "python快速解析XML文件"
+subtitle:   "python解析xml"
+date:       2017-11-22 11:00:00
+author:     "Wwt"
+header-img: "img/xml/bg.png"
+catalog: true
+tags:   
+    - minidom
+    - ElementTree
+    - python
+---
+
+在XML解析方面，Python贯彻了自己‘开箱即用’(batteries include)的原则。在自带的标准库中，Python提供了大量可以用于处理XML语言的包和工具，数量之多，甚至让Python编程新手无从选择。
+
+本文介绍深入解读利用Python语言解析XML文件的几种方式，并以minidom示例，演示具体使用方法和场景。文中使用的Python版本为3.5.2。
+
+### 什么是XML
+
+XML是可扩展标记语言(Extensible Markup Language)的缩写，其中的标记(markup)是关键部分。您可以创建内容，然后使用限定标记标记它，从而使每个单词、短语或块成为可识别、可分类的信息。
+
+XML有以下几个特点：
+
+1. XML的设计宗旨是传输数据，而非显示数据。
+2. XML标签没有被预定义。您需要自行定义标签。
+3. XML被设计为具有自我描述性。
+4. XML是W3C的推荐标准。
+
+### 有哪些可以解析XML的python包
+
+Python的标准库，提供了6种可以用于处理XML的包。
+
+#### xml.dom
+
+`xml.dom`实现的是W3C 制定的DOM API 。如果你习惯于使用DOM API或者有人要求这样做，可以使用这个包。不过要注意，在这个包中，还提供了几个不同的模块，各自的性能有所区别。
+
+DOM解析器在任何处理开始之前，必须把基于XML文件生成的树状数据放在内存，所以DOM解析器的内存使用量完全根据输入资料的大小。
+
+#### xml.dom.minidom
+
+`xml.dom.minidom`是DOM API 的极简化实现，比完整的DOM要简单的多，而且这个包也小的多。那些不熟悉DOM的朋友，应该考虑使用xml.etree.ElementTree模块。根据xml的作者评价，这个模块使用起来并不方便，效率也不高，而且还容易出现问题。
+
+#### xml.dom.pulldom
+
+与其他模块不同，`xml.dom.pulldom`模块提供的是一个"pull解析器"，其背后的基本概念指的是从XML流中pull 事件，然后进行处理。虽然与SAX一样采用事件驱动模型(event-driven processing model)，但是不同的是，使用pull解析器时，使用者需要明确地从XML流中pull事件，并对这些事件遍历处理，知道处理完成或者出现错误。
+
+>pull解析（pull parsing）是近来兴起的处理一种XML处理趋势。此前诸如SAX和DOM这些流行的XML解析框架，都是push-based，也就是说对解析工作的控制权，掌握在解析器的手中。
+
+#### xml.sax
+
+`xml.sax`模块实现的是SAX API，这个模块牺牲了便捷性来换取速度和内存占用。SAX是Simple API for XML 的缩写，它并不是由W3C官方所提出的标准。它是事件驱动的，并不需要一次性读入整个文档，而文档的读入过程也就是SAX的解析过程。所谓事件驱动，是指一种基于回调(callback) 机制的程序运行方法。
+
+#### xml.parser.expat
+
+`xml.parser.expat`提供了对C语言编写的expat解析器的一个直接的、底层API接口。expat接口与SAX类似，也是基于事件回调机制，但是这个接口并不是标准化的，只适用于eapat库。
+
+expat是一个面向流的解析器。您注册的解析器回调(或handler)功能，然后开始搜索它的文档。当解析器识别该文件的指定的位置，它会调用该部分相应的处理程序(如果您已经注册的一个)。该文件被输送到解析器，会被分割成多个片断，并分段装到内存中，因此expat可以解析那些巨大的文件。
+
+xml.etree.ElementTree(以下简称ET)
+
+`xml.etree.ElementTree`模块提供了轻量级、Pythonic的API，同时还有一个高效的C语言实现，即xml.etree.cElementTree。与DOM相比，ET的速度更快，API使用更直接、方便。与SAX相比，ET.iterparse函数同样提供了按需解析的功能，不会一次性在内存中读入整个文档。ET的性能与SAX模块大致相仿，但是它的API更加高层次，用户使用起来更加便捷。
+
+笔者在这里建议，在使用Python进行XML解析时，首选使用ET模块，除非你有其他特别的需要，可能需要另外的模块来满足。
+
+>解析XML的这几种API并不是Python独创的，Python也是通过借鉴其他语言或者其他语言引入进来的。例如expat就是一个C语言开发的、用来解析XML文档的开发库。而SAX最初是由DavidMegginson采用java语言开发的，DOM可以以一种独立于平台和语言的方式访问和修改一个文档的内容和结构，可以应用于任何编程语言。
+
+### 利用minidom解析XML
+
+笔者在解析ACE语料时，使用的是minidom,下面就以ACE里的一篇新闻作为示例。
+
+><DOC>
+><DOCID> fsh_29097 </DOCID>
+><DOCTYPE SOURCE="telephone"> CONVERSATION </DOCTYPE>
+><DATETIME> 20041129-17:38:06 </DATETIME>
+><BODY>
+><TEXT>
+><TURN>
+><SPEAKER> prompt </SPEAKER>
+>
+>1. Future Elections Who do you think should run for President/Vice
+>  President in 2008, and why?  Give details about the people you suggest their names, what they do now, and why you think they would do a good job as President.  Some names that have come up in the press are Hillary Clinton, Colin Powell, Barak Obama, Arnold Schwarzenegger and  Jeb Bush.  What do you think of these candidates? Who would hate to  see run for President in 2008?
+>  </TURN>
+>
+>.....
+>
+></DOC>
+
+XML信息体是由树状元素组成。每个XML文档都有一个文档元素，也就是树的根元素，所有其它的元素和内容都包含在根元素中。
+
+DOM是Document Object  Model的简称，它是以对象树来表示一个XML文档的方法，使用它的好处就是你可以非常灵活的在对象中进行遍历。
+
+根据我解析语料的经验，在获得XML文档数的根节点后，实际上分为两种节点(这里测试只用到这两种节点，实际按照nodeType的节点还有很多):元素节点(ELEMENT NODE)和文本节点(TEXT NODE)。元素节点如上面的 "DOCID" 标签，整个就是一个元素节点。文本节点如上面的“ CNN_CF_20030303.1900.00”,也作为一个节点，即文本节点。
+
+节点都具有这三种属性：
+
+- node.nodeName:nodeName为节点名字
+- node.nodeValue:nodeValue是节点的值，只对文本节点有效
+- node.nodeType:nodeType是节点的类型
+
+元素节点(ELMENT NODE)可以用root.getElementByTagName('TEXT')这样来获取'TEXT'标签的一个列表。
+
+文本节点(TEXT NODE)可以用 colume.getAttribute('Name')这样来获取Name的这样一个属性值，属性值指的是:<Column Name='pt' Value='1'/>这样的结构。可以使用node.data或者node.nodeValue来获取文本值。
+
+#### 获取dom对象
+
+```python
+from xml.dom import minidom #引入minidom 模块
+doc=minidom.parse(text_path) #text_path 是文本路径 从xml文件得到dom对象
+doc_root=doc.documentElement #获取文档元素对象
+#这里我们需要text标签下的所有文本内容
+#获得所有<TEXT></TEXT>标签对
+post_node=doc_root.getElementsByTagName("TEXT")
+text=""
+for node in post_node:
+	child=node.childNodes
+	for c in child:
+		print(c)
+		if(c.nodeType==c.TEXT_NODE):
+			print(c.data)
+		if(c.nodeName=='TURN'):
+			print('1',c.childNodes[0].nodeValue)
+			n=c.getElementsByTagName('SPEAKER')[0]
+			print('2',n.childNodes[0].nodeValue)
+			print('3',c.childNodes[2].nodeValue)
+```
+
+- doc_root获得的是整个xml对象。
+- child是标签<TEXT>下所有element节点和text节点。
+- 获取标签<TURN>下面的文本内容，c这里是类似一个列表的东西，可以用列表方法获取，它是有孩子节点的。
+- n=c.getElementsByTagName('SPEAKER')将获得所有<SPEAKER></SPEAKER>标签，所以直接[0]返回这个单独的对象。
+
+解析结果如下
+
+><DOM Text node "'\n'">
+>
+>
+><DOM Element: TURN at 0x22c7e673f20>
+>1 
+>
+>2  prompt 
+>3 
+>
+>1.Future Elections Who do you think should run for President/Vice President in 2008, and why?  Give details about the people you suggest their names, what they do now, and why you think they would do a good job as President.  Some names that have come up in the press are Hillary Clinton, Colin Powell, Barak Obama, Arnold Schwarzenegger and  Jeb Bush.  What do you think of these candidates? Who would hate to  see run for President in 2008?
+
+### 利用ElementTree解析XML
+
+python标准库中，提供了ET的两种实现。一个是纯python实现的`xml.etree.ElementTree`,另一个是速度更快的C语言实现`xml.etree.cElementTree`。请记住是在使用C语言实现，因为它的速度要快很多，而且内存消耗也要少很多。如果你所使用的Python版本中cElementTree所需的加速模块；你可以这样导入加速模块:
+
+```python
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
+```
+
+如果某个API存在不同的实现，上面是常见的导入方式。当然，很可能你直接导入第一个模块时，并不会出现问题。请注意，自python3.3之后，就不采用上面的导入方法，因为`ElementTree`,因为`ElementTree`模块会自动优先使用C加速器，如果不存在C实现，则会使用python实现。因此，使用python3.3+的朋友，只需`import xml.etree.ElementTree`即可。
+
+#### 将XML文档解析为树(tree)
+
+我们先从基础讲起，XML是一种结构化、层级化的数据格式，最适合体现XML的数据结构就是输。ET提供了两个对象:ElementTree将整个XML文档转换为树，`Element`则代表着树上的单个节点。对整个XML文档的交互(读取，写入，查找需要的元素)，一般是在`ElementTree`层面进行的。对单个XML元素及其子元素，则是在Element层面进行的。下面我们举例介绍主要使用方法。
+
+我们使用下面的XML文档，作为演示数据:
+
+>```xml
+><?xml version="1.0"?>
+><entity ID="AFP_ENG_20030304.0250-E1" TYPE="ORG" SUBTYPE="Medical-Science" CLASS="SPC">
+>  <entity_mention ID="AFP_ENG_20030304.0250-E1-3" TYPE="NAM" LDCTYPE="NAM" LDCATR="FALSE">
+>    <extent>
+>      <charseq START="493" END="516">The Davao Medical Center</charseq>
+>    </extent>
+>    <head>
+>      <charseq START="497" END="516">Davao Medical Center</charseq>
+>    </head>
+>  </entity_mention>
+>  ''''''
+></entity>
+>```
+
+
+
+接下来，我们加载这个文档，并进行解析:
+
+>```python
+>import xml.etree.ElementTree as ET
+>tree = ET.ElementTree(file='doc1.xml')
+>```
+
+
+
+然后，我们获取根元素(root element):
+
+>tree.getroot()
+
+```xml
+<Element 'doc' at 0x11eb780>
+```
+
+正如之前所讲，根元素(root)是一个`Elment`对象。我们看看根元素都有哪些属性:
+
+>root=tree.getroot()
+>
+>root.tag, root.attrib
+>
+>('doc',{})
+
+#### 查找需要的元素
+
+从上面的示例中的示例中，可以明显发现我们能够通过简单的递归方法(对每一个元素，递归方式访问其所有子元素)获取树中的所有元素。但是，由于这是十分常见的工作，ET提供了一些简便的实现方法。
+
+`Element`对象有一个`iter`方法，可以对某个元素对象之下所有的子元素进行深度优先遍历（DFS）。`ElementTree`对象同样也有这个方法。下面是查找XML文档中所有元素的最简单方法：
+
+>```python
+>for elem in tree.iter():
+>    print (elem.tag, elem.attrib)
+>```
+
+在此基础上，我们可以对树进行任意遍历----遍历所有元素，查找出自己感兴趣的属性。但是ET可以让这个工作更加简便、快捷。`iter`方法可以接受tag名称，然后遍历所有具备提供tag的元素,同时通过`attrib`和`text`可以获得属性值和文本值。
+
+>```python
+>for elem in tree.iter(tag='entity'):
+>    print (elem.tag, elem.attrib)
+>    et_id=entity.attrib['ID']
+>	et_type=entity.attrib['TYPE'].lower()
+>	for em in entity.iter("entity_mention"):
+>		em_id=em.attrib['ID]                         start=em.find('head').find('charseq').attrib['START']                    text=em.find('head').find('charseq').text.replace('\n'," ")          
+>```
+
+
+
+>转载自[《深入解读Python解析XML的几种方式》](http://codingpy.com/article/parsing-xml-using-python/)，部分内容有修改。
