@@ -69,22 +69,22 @@ xml.etree.ElementTree(以下简称ET)
 
 笔者在解析ACE语料时，使用的是minidom,下面就以ACE里的一篇新闻作为示例。
 
-><DOC>
-><DOCID> fsh_29097 </DOCID>
-><DOCTYPE SOURCE="telephone"> CONVERSATION </DOCTYPE>
-><DATETIME> 20041129-17:38:06 </DATETIME>
-><BODY>
-><TEXT>
-><TURN>
-><SPEAKER> prompt </SPEAKER>
->
->1. Future Elections Who do you think should run for President/Vice
->  President in 2008, and why?  Give details about the people you suggest their names, what they do now, and why you think they would do a good job as President.  Some names that have come up in the press are Hillary Clinton, Colin Powell, Barak Obama, Arnold Schwarzenegger and  Jeb Bush.  What do you think of these candidates? Who would hate to  see run for President in 2008?
->  </TURN>
->
->.....
->
-></DOC>
+```xml
+<DOC>
+<DOCID> fsh_29097 </DOCID>
+<DOCTYPE SOURCE="telephone"> CONVERSATION </DOCTYPE>
+<DATETIME> 20041129-17:38:06 </DATETIME>
+<BODY>
+<TEXT>
+<TURN>
+<SPEAKER> prompt </SPEAKER>
+
+1. Future Elections Who do you think should run for President/Vice
+   President in 2008, and why?  Give details about the people you suggest their names, what they do now, and why you think they would do a good job as President.  Some names that have come up in the press are Hillary Clinton, Colin Powell, Barak Obama, Arnold Schwarzenegger and  Jeb Bush.  What do you think of these candidates? Who would hate to  see run for President in 2008?
+</TURN>
+.....
+</DOC>
+```
 
 XML信息体是由树状元素组成。每个XML文档都有一个文档元素，也就是树的根元素，所有其它的元素和内容都包含在根元素中。
 
@@ -223,7 +223,9 @@ except ImportError:
 >    et_id=entity.attrib['ID']
 >	et_type=entity.attrib['TYPE'].lower()
 >	for em in entity.iter("entity_mention"):
->		em_id=em.attrib['ID]                         start=em.find('head').find('charseq').attrib['START']                    text=em.find('head').find('charseq').text.replace('\n'," ")          
+>		em_id=em.attrib['ID]                       
+>                        start=em.find('head').find('charseq').attrib['START']
+>        text=em.find('head').find('charseq').text.replace('\n'," ")                              
 >```
 
 
