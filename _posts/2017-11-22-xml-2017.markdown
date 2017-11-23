@@ -146,10 +146,10 @@ for node in post_node:
 
   ​
 
-- n=c.getElementsByTagName('SPEAKER')将获得所有
+- n=c.getElementsByTagName('SPEAKER')
 
   ```xml
-  <SPEAKER></SPEAKER>标签，所以直接[0]返回这个单独的对象。
+  将获得所有<SPEAKER></SPEAKER>标签，所以直接[0]返回这个单独的对象。
   ```
 
   ​
