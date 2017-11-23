@@ -78,7 +78,6 @@ xml.etree.ElementTree(以下简称ET)
 <TEXT>
 <TURN>
 <SPEAKER> prompt </SPEAKER>
-
 1. Future Elections Who do you think should run for President/Vice
    President in 2008, and why?  Give details about the people you suggest their names, what they do now, and why you think they would do a good job as President.  Some names that have come up in the press are Hillary Clinton, Colin Powell, Barak Obama, Arnold Schwarzenegger and  Jeb Bush.  What do you think of these candidates? Who would hate to  see run for President in 2008?
 </TURN>
@@ -90,7 +89,7 @@ XML信息体是由树状元素组成。每个XML文档都有一个文档元素�
 
 DOM是Document Object  Model的简称，它是以对象树来表示一个XML文档的方法，使用它的好处就是你可以非常灵活的在对象中进行遍历。
 
-根据我解析语料的经验，在获得XML文档数的根节点后，实际上分为两种节点(这里测试只用到这两种节点，实际按照nodeType的节点还有很多):元素节点(ELEMENT NODE)和文本节点(TEXT NODE)。元素节点如上面的 "DOCID" 标签，整个就是一个元素节点。文本节点如上面的“ CNN_CF_20030303.1900.00”,也作为一个节点，即文本节点。
+根据我解析语料的经验，在获得XML文档数的根节点后，实际上分为两种节点(这里测试只用到这两种节点，实际按照nodeType的节点还有很多):元素节点(ELEMENT NODE)和文本节点(TEXT NODE)。元素节点如上面的 "DOCID" 标签，整个就是一个元素节点。文本节点如上面的“ fsh_29097”,也作为一个节点，即文本节点。
 
 节点都具有这三种属性：
 
@@ -100,7 +99,7 @@ DOM是Document Object  Model的简称，它是以对象树来表示一个XML文�
 
 元素节点(ELMENT NODE)可以用root.getElementByTagName('TEXT')这样来获取'TEXT'标签的一个列表。
 
-文本节点(TEXT NODE)可以用 colume.getAttribute('Name')这样来获取Name的这样一个属性值，属性值指的是:<Column Name='pt' Value='1'/>这样的结构。可以使用node.data或者node.nodeValue来获取文本值。
+文本节点(TEXT NODE)可以用 colume.getAttribute('Name')这样来获取Name的这样一个属性值，属性值指的是:  $<Column Name="pt" Value="1"/>$这样的结构。可以使用node.data或者node.nodeValue来获取文本值。
 
 #### 获取dom对象
 
@@ -126,9 +125,9 @@ for node in post_node:
 ```
 
 - doc_root获得的是整个xml对象。
-- child是标签<TEXT>下所有element节点和text节点。
-- 获取标签<TURN>下面的文本内容，c这里是类似一个列表的东西，可以用列表方法获取，它是有孩子节点的。
-- n=c.getElementsByTagName('SPEAKER')将获得所有<SPEAKER></SPEAKER>标签，所以直接[0]返回这个单独的对象。
+- child是标签$<TEXT>$下所有element节点和text节点。
+- 获取标签$<TURN>$下面的文本内容，c这里是类似一个列表的东西，可以用列表方法获取，它是有孩子节点的。
+- n=c.getElementsByTagName('SPEAKER')将获得所有$<SPEAKER></SPEAKER>$标签，所以直接[0]返回这个单独的对象。
 
 解析结果如下
 
@@ -164,6 +163,7 @@ except ImportError:
 
 >```xml
 ><?xml version="1.0"?>
+><doc>
 ><entity ID="AFP_ENG_20030304.0250-E1" TYPE="ORG" SUBTYPE="Medical-Science" CLASS="SPC">
 >  <entity_mention ID="AFP_ENG_20030304.0250-E1-3" TYPE="NAM" LDCTYPE="NAM" LDCATR="FALSE">
 >    <extent>
@@ -175,6 +175,7 @@ except ImportError:
 >  </entity_mention>
 >  ''''''
 ></entity>
+></doc>
 >```
 
 
@@ -217,17 +218,32 @@ except ImportError:
 
 在此基础上，我们可以对树进行任意遍历----遍历所有元素，查找出自己感兴趣的属性。但是ET可以让这个工作更加简便、快捷。`iter`方法可以接受tag名称，然后遍历所有具备提供tag的元素,同时通过`attrib`和`text`可以获得属性值和文本值。
 
->```python
->for elem in tree.iter(tag='entity'):
->    print (elem.tag, elem.attrib)
->    et_id=entity.attrib['ID']
->	et_type=entity.attrib['TYPE'].lower()
->	for em in entity.iter("entity_mention"):
->		em_id=em.attrib['ID]                       
->                        start=em.find('head').find('charseq').attrib['START']
->        text=em.find('head').find('charseq').text.replace('\n'," ")                              
->```
+```python
+for elem in tree.iter(tag='entity'):
+    et_id=entity.attrib['ID']
+	et_type=entity.attrib['TYPE'].lower()
+    print(et_id,et_type)
+	for em in entity.iter("entity_mention"):
+		em_id=em.attrib['ID]
+        print(em_id)
+                        start=em.find('head').find('charseq').attrib['START']
+        print(start) 
+                        text=em.find('head').find('charseq').text.replace('\n'," ")
+        print(text)
+```
+
+>AFP_ENG_20030304.0250-E1
+>
+>ORG
+>
+>AFP_ENG_20030304.0250-E1-3
+>
+>497
+>
+>Davao Medical Center
 
 
 
->转载自[《深入解读Python解析XML的几种方式》](http://codingpy.com/article/parsing-xml-using-python/)，部分内容有修改。
+### 参考
+
+[《深入解读Python解析XML的几种方式》](http://codingpy.com/article/parsing-xml-using-python/)，部分内容有修改。
