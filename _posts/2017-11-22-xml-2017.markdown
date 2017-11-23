@@ -245,17 +245,13 @@ except ImportError:
 在此基础上，我们可以对树进行任意遍历----遍历所有元素，查找出自己感兴趣的属性。但是ET可以让这个工作更加简便、快捷。`iter`方法可以接受tag名称，然后遍历所有具备提供tag的元素,同时通过`attrib`和`text`可以获得属性值和文本值。
 
 ```python
-for elem in tree.iter(tag='entity'):
-    et_id=entity.attrib['ID']
+for entity in root.iter("entity"):
+	et_id=entity.attrib['ID']
 	et_type=entity.attrib['TYPE'].lower()
-    print(et_id,et_type)
 	for em in entity.iter("entity_mention"):
-		em_id=em.attrib['ID]
-        print(em_id)
-                        start=em.find('head').find('charseq').attrib['START']
-        print(start) 
-                        text=em.find('head').find('charseq').text.replace('\n'," ")
-        print(text)
+		em_id=em.attrib['ID']
+        start=em.find('head').find('charseq').attrib['START']
+        text=em.find('head').find('charseq').text
 ```
 
 >AFP_ENG_20030304.0250-E1
