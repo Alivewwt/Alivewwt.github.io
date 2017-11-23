@@ -250,8 +250,8 @@ for entity in root.iter("entity"):
 	et_type=entity.attrib['TYPE'].lower()
 	for em in entity.iter("entity_mention"):
 		em_id=em.attrib['ID']
-        start=em.find('head').find('charseq').attrib['START']
-        text=em.find('head').find('charseq').text
+          start=em.find('head').find('charseq').attrib['START']
+          text=em.find('head').find('charseq').text
 ```
 
 >AFP_ENG_20030304.0250-E1
