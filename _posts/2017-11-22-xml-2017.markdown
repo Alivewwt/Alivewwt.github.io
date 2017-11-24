@@ -99,9 +99,7 @@ DOM是Document Object  Model的简称，它是以对象树来表示一个XML文�
 
 元素节点(ELMENT NODE)可以用root.getElementByTagName('TEXT')这样来获取'TEXT'标签的一个列表。
 
-文本节点(TEXT NODE)可以用 colume.getAttribute('Name')这样来获取Name的这样一个属性值，属性值指的是:&lt Column Name="pt" Value="1" &gt 
-
->
+文本节点(TEXT NODE)可以用 colume.getAttribute('Name')这样来获取Name的这样一个属性值，属性值指的是:&lt; Column Name="pt" Value="1" /&gt; 
 
 这样的结构。可以使用node.data或者node.nodeValue来获取文本值。
 
@@ -130,11 +128,11 @@ for node in post_node:
 
 - doc_root获得的是整个xml对象。
 
-- child是节点列表&lt text &gt下所有element节点和text节点。
+- child是节点列表&lt;text &gt;下所有element节点和text节点。
 
-- 获取内容&lt TURN &gt下面的文本内容，c这里是类似一个列表的东西，可以用列表方法获取，它是有孩子节点的。
+- 获取内容&lt;TURN &gt;下面的文本内容，c这里是类似一个列表的东西，可以用列表方法获取，它是有孩子节点的。​
 
-- n=c.getElementsByTagName('SPEAKER')将获得所有&lt SPEAKER &gt &lt/SPEAKER &gt标签，所以直接[0]返回这个单独的对象。
+- n=c.getElementsByTagName('SPEAKER')将获得所有&lt;SPEAKER &gt;&lt;/SPEAKER &gt;标签，所以直接[0]返回这个单独的对象。
 
   ​
 
