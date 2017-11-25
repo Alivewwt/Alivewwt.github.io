@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "理解Attention机制"
+title:      "Attention机制"
 subtitle:   "Attention"
 date:       2017-11-14 11:00:00
 author:     "Wwt"
