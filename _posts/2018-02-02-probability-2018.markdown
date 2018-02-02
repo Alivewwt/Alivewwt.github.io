@@ -141,7 +141,7 @@ $$Ñ(x;\mu,\delta^2)= \sqrt{\frac{1}{2\pi\delta^2}}exp \big(-\frac{1}{2\delta^2}
 
 下图画出了正态分布的概率密度函数
 
-![1](/img/proability/1.png)
+![1](/img/probability/1.png)
 
 图示：正态分布。正态分布$Ñ(x;\mu,\delta^2)$呈现经典的“钟型曲线”的性质，其中中心峰的$x$坐标有$\mu$给出，峰的宽度受$\delta$控制。在这个示例中，我们展示的是**标准正态分布**，其中$\mu=0.\delta=1$。
 
@@ -163,7 +163,7 @@ $$Ñ(x;\mu,\beta^{-1})=\sqrt{\frac{det(\beta)}{(2\pi)^n}}exp\big(-\frac{1}{2}(x-
 
 ### 参考
 
->来源：[<deep learning>](https://github.com/exacity/deeplearningbook-chinese),部分内容有删改
+>来源：[deep learning](https://github.com/exacity/deeplearningbook-chinese),部分内容有删改
 
 
 
