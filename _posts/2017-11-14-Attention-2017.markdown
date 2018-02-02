@@ -87,11 +87,29 @@ $$\alpha_{ij}=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}\\e_{ij}=a(s_{i-1},
 
 ![3](/img/attention/3.png)
 
+### Attention定义
+
+Google的一般化Attention思路也是一个编码序列的方案，因此我们也可以认为它跟RNN、CNN一样，都是一个序列编码的层。
+
+事实上Google给出的方案是很具体的。首先，它先把Attention的定义给了出来：
+
+$$Attention(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = softmax\left(\frac{\boldsymbol{Q}\boldsymbol{K}^{\top}}{\sqrt{d_k}}\right)\boldsymbol{V}$$
+
+这里用的是跟Google的论文一致的符号,其中$$\boldsymbol{Q}\in\mathbb{R}^{n\times d_k}, \boldsymbol{K}\in\mathbb{R}^{m\times d_k}, \boldsymbol{V}\in\mathbb{R}^{m\times d_v}$$。 如果忽略激活函数$softmax$的话，那么事实上它就是三个$n\times d_k,d_k\times m, m\times d_v$的矩阵相乘，最后的结果就是一个$n*d_v$的序列。
+
+那怎么理解这种结构呢？我们不妨逐个向量来看。
+
+$$Attention(\boldsymbol{q}_t,\boldsymbol{K},\boldsymbol{V}) = \sum_{s=1}^m \frac{1}{Z}\exp\left(\frac{\langle\boldsymbol{q}_t, \boldsymbol{k}_s\rangle}{\sqrt{d_k}}\right)\boldsymbol{v}_s$$
+
+其中$Z$是归一化因子。事实上$q.k,v$分别是$query,key,value$的简写，$K,V$是一一对应的，
+
+Attention机制的实现是通过保留LSTM编码器对输入序列的中间输出结果，然后训练一个模型来对这些输入进行选择性的学习并且在模型输出时将输出序列与之进行关联。它们就像是key-value的关系，那么上式的意思就是通过$q_t$这个query,通过与各个$k_S$内积的softmax的方式，来得到$q_t$和各个$v_s$的相似度，然后加权求和，得到一个$d_v$维的向量。其中因子$\sqrt d_k$起到调节作用，使得内积不至于太大（太大的话softmax后就非0即1了，不够“soft”了）。
+
+**事实上这种Attention的定义并不新鲜，但由于Google的影响力，我们可以认为现在是更加正式地提出了这个定义，并将其视为一个层地看待；此外这个定义只是注意力的一种形式，还有一些其他选择，比如query跟key的运算方式不一定是点乘（还可以是拼接后再内积一个参数向量），甚至权重都不一定要归一化，等等**。
+
 ### 序列中的Attention
 
 Attention机制的基本思想是，打破了**传统编码器-解码器结构在编解码结构时都依赖于内部一个固定长度向量的限制。**
-
-Attention机制的实现是通过保留LSTM编码器对输入序列的中间输出结果，然后训练一个模型来对这些输入进行选择性的学习并且在模型输出时将输出序列与之进行关联。
 
 换一个角度而言，输出序列的每一项的生成概率取决于在输入序列中选择了哪些项。
 
