@@ -130,4 +130,6 @@ Attention机制的基本思想是，打破了**传统编码器-解码器结构�
 >http://machinelearningmastery.com/attention-long-short-term-memory-recurrent-neural-networks/
 >
 ><深度学习笔记(六)：Encoder-Decoder模型和Attention模型> http://blog.csdn.net/u014595019/article/details/52826423
+>
+>[ 《 Attention is All You Need》 浅读 (简介+代码)](https://spaces.ac.cn/archives/4765/)
 
