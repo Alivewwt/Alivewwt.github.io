@@ -7,8 +7,7 @@ author:     "Wwt"
 header-img: "img/information/bg.png"
 catalog: true
 tags:   
-    - 信息
-    - 熵
+    - 信息熵
     - 自然语言处理
 ---
 ### 信息熵

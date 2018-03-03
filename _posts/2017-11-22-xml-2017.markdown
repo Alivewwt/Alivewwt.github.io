@@ -7,8 +7,6 @@ author:     "Wwt"
 header-img: "img/xml/bg.png"
 catalog: true
 tags:   
-    - minidom
-    - ElementTree
     - python
 ---
 

@@ -7,9 +7,8 @@ author:     "Wwt"
 header-img: "img/gram/bg.jpg"
 catalog: true
 tags:   
-    - 语言模型
-    - 词向量
     - 深度学习
+    - 语言模型
 ---
 
 ​	Deeping Learning算法已经在图像和音频领域取得了惊人的成果，但是在NLP领域中尚未见到如此激动人心的结果。关于这个原因，引一条我比较赞同的微博。

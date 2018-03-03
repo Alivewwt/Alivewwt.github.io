@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "循环神经网络"
+title:      "循环神经网络-下"
 subtitle:   "RNN"
 date:       2017-06-27 11:00:00
 author:     "Wwt"
@@ -8,7 +8,6 @@ header-img: "img/RNN_2/bg.jpg"
 catalog: true
 tags:   
     - 循环神经网络
-    - LSTM
     - 深度学习
 ---
 ### 双向RNN
@@ -105,6 +104,8 @@ $\text{LSTM}$细胞的输出$h_{i}^{(t)}$也可以由输出门$q_{i}^{(t)}$关�
 
 ### 参考
 
-[《深度学习》](https://github.com/exacity/deeplearningbook-chinese)
+>来源：[deep learning](https://github.com/exacity/deeplearningbook-chinese),部分内容有删改
+
+
 
 ​	

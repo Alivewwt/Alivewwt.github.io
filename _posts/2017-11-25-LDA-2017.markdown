@@ -9,7 +9,6 @@ catalog: true
 tags:   
     - LDA
     - 主题模型
-    - 概率图
 ---
 ### 什么是主题模型
 

@@ -6,9 +6,9 @@ date:       2017-05-16 11:00:00
 author:     "Wwt"
 header-img: "img/CNN/bg.jpg"
 catalog: true
-tags:   
+tags:  
+    - 深度学习 
     - 卷积神经网络
-    - 深度学习
 ---
 ### 1.概述
 

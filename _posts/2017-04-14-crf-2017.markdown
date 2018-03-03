@@ -6,8 +6,7 @@ date:       2017-04-14 11:00:00
 author:     "Wwt"
 header-img: "img/crf/bg.jpg"
 catalog: true
-tags:   
-    - 自然语言处理
+tags:
     - CRF
     - 维特比算法
 ---
