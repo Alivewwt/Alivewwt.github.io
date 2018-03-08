@@ -1,0 +1,342 @@
+---
+layout:     post
+title:      "排序算法"
+subtitle:   "排序"
+date:       2018-03-08 11:00:00
+author:     "Wwt"
+header-img: "img/sort/bg.png"
+catalog: true
+tags:   
+    - 基本算法
+---
+### 排序的基本概念
+
+**排序**（sorting）是按关键字的非递减或非递增顺序对一组记录重新进行整队（或排列）的操作。
+
+当待排序记录中的关键字$k_i(i=1,2,...,n)$都不相同时，则任何一个记录的无序序列经排序后得到的结果是唯一的；反之，若待排序的序列中存在两个或两个以上关键字相等的记录时，则排序所得到的记录序列的结果不唯一。假设$k_i=k_j(1\leq i \leq n,1\leq j \leq n,i \neq j)$,且在排序前的序列中$r_i$领先于$r_j$即（$i<j$）。若在排序后的序列中$r_i$仍然领先$r_j$,则称所用的排序方法是**稳定的**；反之，若可能使排序后的序列中$r_i$领先于$r_j$，则称所用的排序的方法是**不稳定的**。在某些有特殊要求的应用中需要考虑稳定性的问题。
+
+根据在排序过程中涉及的存储器不同，可将排序算法分为两类：（1）**内部排序**：在排序进行的过程中不使用计算机外部存储器的排序过程。（2）**外部排序**：在排序进行的过程中需要对外存进行访问的排序过程。接下来我们讨论各种内部排序算法。
+
+内部排序的过程是一个逐步扩大记录的有序序列长度的过程。通常在排序的过程中，参与排序的记录序列可化为两个区域：有序序列区和无序序列区，其中有序序列区中的记录已按关键字非递减有序排列。使有序序列区中记录的数目增加一个或几个的操作称为一趟排序。下面一一介绍排序算法。
+
+### 选择排序
+
+**基本思想**：在要排序的一组数组中，选出最小（或者最大）的一个数与**第1个**位置的数交换；然后在剩下的数当中再找最小（或者最大）的与**第2个**位置的数交换，依次类推，直到第N-1个元素（倒数第二个数）和第N个元素（最后一个数）比较为止。
+
+简单的选择排序实例：
+
+>初始值： 3 1 5 7 2 4 9 6
+>
+>第1趟： 1 3 5 7 2 4 9 6
+>
+>第2趟：1 2  5 7 3 4 9 6
+>
+>第3趟：1 2 3 7 5 4 9 6
+>
+>第4趟： 1 2 3 4 5 7 9 6
+>
+>第5趟： 1 2 3 4 5 7 9 6
+>
+>第6趟： 1 2 3 4 5 6 9 7
+>
+>第7趟：1 2 3 4 5 6 7 9
+>
+>第8趟： 1 2 3 4 5 6 7 9
+
+算法
+
+```java
+void selectSort(int nums[]){
+  for (int i=0;i<nums.length-1;i++){
+	int k=i;
+  	for(int j=i+1;j<nums.length;j++){//选择最小的记录
+       if(nums[j]<nums[k])
+         k=j;//记下目前找到的最小值所在位置
+     }
+    if(i!=k){
+      int temp=nums[i];
+      nums[i]=nums[j];
+      nums[j]=temp;
+    }
+    }
+  }
+}
+```
+
+### 冒泡排序
+
+**基本思想**：通过对无序序列区区中记录进行相邻记录关键字间的“比较”和记录位置的“交换”实现关键字较小的记录向“一头”飘移，而关键字较大的记录向“另一头”下沉，从而达到记录按关键字非递减顺序有序排列的目标。
+
+假设在排序过程中，记录序列$R[1..n]$分为无序序列$R[1..i]$和有序序列$R[i+1..n]$两个区域，则本趟冒泡排序的基本操作是从第1个记录起，比较第1个记录和第2个记录的关键字，若呈“逆序”关系，则将两个记录交换之，然后比较第2个记录和第3个记录的关键字，若呈“逆序”，则交换之。以此类推，直至比较了$R[i-1]$和$R[i]$之后，该无序区中关键字最大的记录将定位在$R[i]$的位置上。
+
+![1](/img/sort/1.png)
+
+一般情况下，整个猫婆排序只需进行$k(1\le k <n)$趟冒泡操作，冒泡排序的结束条件是“在某一趟排序过程中没有进行记录的交换的操作”。从上图中可见，，在冒泡排序的过程中，关键字较小的记录如“冒泡”般逐趟往上“漂浮”，而关键字较大的记录如石头般“下沉”，每一趟有一块“最大”的石头鱼沉落水底。
+
+**算法**
+
+```java
+public void bubbleSort(int []nums){
+  int temp=0;
+  for(int i=0;i<nums.length-1;i++){
+    for(int j=0;j<nums.length-1-i;j++){
+		if(nums[j]>nums[j+1]){
+			temp=nums[j];
+          	nums[j]=nums[j+1]；
+             nums[j+1]=temp;
+        }	
+    }
+  }
+}
+```
+
+### 插入排序
+
+#### 直接插入排序
+
+**基本思想**：将当前无序序列区$R[i.n]$中的记录$R[i]$“插入”到有序序列区$R[1..i-1]$中，使有序区的长度增1.即：先将序列的第1个记录看成是一个有序的子序列，然后从第2个记录逐个进行插入，直至整个序列有序为止。
+
+要点：设立哨兵，作为临时存储和判断数组边界之用。
+
+![2](/img/sort/2.png)
+
+如果碰见一个和插入元素相等的，那么插入元素把想插入的元素放在相等元素的后面。所以，相等元素的前后顺序没有改变，从原无序序列出去的顺序就是排好序后的顺序，所以插入排序是稳定的。
+
+```java
+public void insertSort(int []nums){
+	int j=0;
+  	for(int i=1;i<nums.length;i++){
+		int x=nums[i];
+      //假设x比前面的值小，则将前面的值后移
+		for(j=i;j>0&&x<nums[j-1];j--){
+          nums[j]=nums[j-1];
+		}
+		nums[j]=x;//插入
+	}
+}
+```
+
+#### 希尔排序（shell's sort）
+
+希尔排序是1959年由D.L.Shell提出来的，相对直接排序有较大的改进。希尔排序又叫**缩小增量排序**。
+
+**基本思想**
+
+先将整个待排序的记录序列分割成为若干个子序列分别进行直接插入排序，待整个序列中的记录“基本有序”时，再对全体记录进行依次直接插入排序。
+
+操作方法
+
+>1.选择一个增量序列$t_1,t_2,...,t_k$，其中$t_i<t_j,t_k=1$
+>
+>2按增量序列个数$k$对待排序列分割成若干长度为$m$的子序列，分别对各子表进行直接插入排序。仅增量因子为1时，整个序列作为一个表来处理，表长度即为整个序列的长度。
+
+希尔排序的示例：
+
+![3](/img/sort/3.png)
+
+```java
+public void shellSort(int nums[]){
+  int j=0;
+  int temp=0;
+  //每次将步长缩短为原来的一半
+  for（int increment=data.length/2;increment>0;increment/=2）{
+    for(int i=increment;i<data.length;i++){
+      temp=data[i];
+      for(j=i;j>=increment;j-=increment){
+        if(temp>data[j-incremnet]){
+          data[j]=data[j-increment];
+        }else{
+          break;
+        }
+      }
+      data[j]=temp;
+    }
+  }
+}
+```
+
+### 快速排序
+
+**基本思想**：快速排序是从冒泡排序改而得的一种“交换”排序方法，主要是通过一趟排序将待排记录分割成相邻的两个区域，其中一个区域中记录的关键字均比另一区域中记录的关键字小（区域内不见得有序），则可分别对这两个区域的记录进行再排序，以达到整个序列有序。
+
+假设待排序的原始记录序列为
+
+$$（R_s,R_{s+1},...,R_{t-1},R_t）$$
+
+则一趟快速排序的基本操作是：任选一个记录（通常选记录$R_s$），以它的关键字作为“枢轴”，凡序列中关键字小于枢轴的记录均移动至该记录之前；反之，凡序列中关键字大于枢轴的记录均移动至该记录之后。致使一趟排序之后，记录的无序序列$R[s..t]$将分割成两部分:$R[s..i-1]$和$R[i+1..t]$，且使
+
+$$R[j].key\leq R[i].key\leq R[j].key$$
+
+具体操作过程描述如下：假设枢轴记录的关键字为pivotkey,附设两个指针low和high，它们的初值分别为$s$和$t$。首先将枢轴记录移至临时变量，之后检测指针所指记录，若$R[high].key\geq pivotkey$，则减小high,否则将$R[high]$移至指针low所指位置，之后检测指针low所指记录，若$R[low].key\leq pivotkey$，则增加low，否则将$R[low]$移至指针high所指位置，重复进行上述两个方向的检测，直至high和low两个指针指向同一个位置重合为止，
+
+（a）一趟排序过程
+
+![4](/img/sort/4.png)
+
+（b）排序的全过程
+
+![5](/img/sort/5.png)
+
+```java
+public int getMiddle(int[] nums,int low,int high){
+  int temp=nums[low];//数组的第一个作为中轴
+  while(low<high){
+	while(low<high && numbers[high]>=temp){
+		high--;
+    }
+    nums[low]=nums[high];//比中轴小的记录移到低端
+    while(low<high && nums[low]<temp){
+		low++;
+  }
+    nums[high]=nums[low];//比中轴大的记录移到高端
+	}
+  nums[low]=temp;//中轴记录到尾
+  return low;
+}
+
+//递归的分治法
+public void quickSort(int nums[],int low,int high){
+  if(lwo<high){
+	if(low<high){
+		int midddle=getMiddle(nums,low,high);//将nums数组一分为二
+      quickSort(nums,low,middle-1);//对低字段表进行递归排序
+      quickSort(nums,middle+1,high);//对高字段表进行递归排序
+    }
+  }
+}
+//快速排序提供方法调用
+public void quick(int []nums){
+	if(nums.length>0){
+		quickSort(nums,0,nums,length-1)
+    }
+}
+```
+
+### 归并排序
+
+**基本思想**：利用“归并操作”的一种排序方法。将两个有序表“归并”为一个有序表，无论是顺序表还是链表，归并操作都可以在线性事件复杂度内实现。归并排序的基本操作是将两个位置相邻的有序记录子序列$R[i..m]R[m+1..n]$归并为一个有序记录序列$R[i..n]$。
+
+![6](/img/sort/6.png)
+
+```java
+public int[] sort(int []nums,int low,int high){
+	int mid=(low+high)/2;
+	if(low<high){
+      //左边
+      sort(nums,low,mid);
+      //右边
+      sort(nums,mid+1,high);
+      //左右归并
+      merge(nums,low,mid,high);
+	}
+	return nums;
+}
+/*
+将数组中low到high位置的数进行排列
+@ nums 待排序数组
+@ low 待排的开始位置
+@ mid 待排的中间位置
+@ high 待排结束位置
+*/
+public void merge(int []nums,int low,int mid, int high){
+  int []temp=new int[high-low+1];
+  int i=low;
+  int j=mid+1;
+  int k=0;
+  //把较小的数先移到新数组中
+  while(i<=mid && j<=high){
+    if(nums[i]<nums[j]){
+      temp[k++]=nums[i++];
+    }else{
+      temp[k++]=nums[j++];
+    }
+  }
+  //把左边剩余的数移入数组
+  while(i<=mid){
+    temp[k++]=nums[i++];
+  }
+  //把右边剩余的数移入数组
+  while(j<=high){
+	temp[k++]=nums[j++];
+  }
+  //把新数组中的数覆盖nums数组
+  for(int k2=0;k2<temp.length;k2++)
+    nums[k2+low]=temp[k2];
+}
+```
+
+### 堆排序
+
+**基本思想**：堆排序是对选择排序的一种改进方法。在此首先需要引进“堆”的概念。
+
+**堆的定义**：堆是满足下列性质的数列${r_1,r_2,...r_n}$:
+
+$$\begin{cases}   r_i \leq r_{2i} \\ r_i\leq r_{2i+1} \end{cases} 或  \begin{cases}   r_i \geq r_{2i} \\ r_i\geq r_{2i+1} \end{cases} $$
+
+$(i=1,2,...[n/2])$
+
+若上述数列是堆，则$r_1$必是数列中的最小值或最大值，则分别称满足上式所示关系的序列为小顶堆或大顶堆。
+
+堆排序即是利用堆的特性对记录序列进行排序的一种排序方法。具体做法是：先按记录的关键字建一个“大顶堆”，因此选得一个关键字为最大的记录，然后与序列中最后一个记录交换，之后继续对序列中前$n-1$记录进行“筛选”，重新将它调整为一个“大顶堆”，再将堆顶记录和第$n-1$个记录交换。这样，有序性逐渐从右部向左扩大，如此反复直至排序结束。
+
+```java
+public class HeapSort {
+  public static void main(String[] args) {
+        int[] a={49,38,65,97,76,13,27,49,78,34,12,64};
+        int arrayLength=a.length;  
+        //循环建堆  
+        for(int i=0;i<arrayLength-1;i++){  
+            //建堆  
+            buildMaxHeap(a,arrayLength-1-i);  
+            //交换堆顶和最后一个元素  
+            swap(a,0,arrayLength-1-i);  
+            System.out.println(Arrays.toString(a));  
+        }  
+    }
+
+  //对data数组从0到lastIndex建大顶堆
+  public static void buildMaxHeap(int[] data, int lastIndex){
+         //从lastIndex处节点（最后一个节点）的父节点开始 
+        for(int i=(lastIndex-1)/2;i>=0;i--){
+            //k保存正在判断的节点 
+            int k=i;
+            //如果当前k节点的子节点存在  
+            while(k*2+1<=lastIndex){
+                //k节点的左子节点的索引 
+                int biggerIndex=2*k+1;
+                //如果biggerIndex小于lastIndex，即biggerIndex+1代表的k节点的右子节点存在
+                if(biggerIndex<lastIndex){  
+                    //若果右子节点的值较大  
+                    if(data[biggerIndex]<data[biggerIndex+1]){  
+                        //biggerIndex总是记录较大子节点的索引  
+                        biggerIndex++;  
+                    }  
+                }  
+                //如果k节点的值小于其较大的子节点的值  
+                if(data[k]<data[biggerIndex]){  
+                    //交换他们  
+                    swap(data,k,biggerIndex);  
+                    //将biggerIndex赋予k，开始while循环的下一次循环，重新保证k节点的值大于其左右子节点的值  
+                    k=biggerIndex;  
+                }else{  
+                    break;  
+                }  
+            }
+        }
+    }
+    //交换
+    private static void swap(int[] data, int i, int j) {  
+        int tmp=data[i];  
+        data[i]=data[j];  
+        data[j]=tmp;  
+    }
+}
+```
+
+### 参考
+
+>来源：《数据结构及应用算法教程》严蔚敏
+>
+>[必须知道的八大种排序算法 [java实现]](https://www.jianshu.com/p/8c915179fd02) 
+>
+>部分内容删改
