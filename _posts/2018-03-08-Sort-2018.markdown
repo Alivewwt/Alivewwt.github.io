@@ -335,7 +335,7 @@ public class HeapSort {
 
 ### 参考
 
->来源：《数据结构及应用算法教程》严蔚敏
+>《数据结构及应用算法教程》严蔚敏
 >
 >[必须知道的八大种排序算法 [java实现]](https://www.jianshu.com/p/8c915179fd02) 
 >
