@@ -196,13 +196,11 @@ public int getMiddle(int[] nums,int low,int high){
 
 //递归的分治法
 public void quickSort(int nums[],int low,int high){
-  if(lwo<high){
 	if(low<high){
 		int midddle=getMiddle(nums,low,high);//将nums数组一分为二
       quickSort(nums,low,middle-1);//对低字段表进行递归排序
       quickSort(nums,middle+1,high);//对高字段表进行递归排序
     }
-  }
 }
 //快速排序提供方法调用
 public void quick(int []nums){
