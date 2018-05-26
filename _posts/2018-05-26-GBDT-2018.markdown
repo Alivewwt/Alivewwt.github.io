@@ -134,11 +134,11 @@ $Obj^{(t)} \approx \sum_{i=1}^n \left[ g_if_t(x_i) + \frac12h_if_t^2(x_i) \right
 
 定义集合$I_j=\{ i \vert q(x_i)=j \}$为所有被划分到叶子节点$j$的训练样本的集合。等式(5)可以根据树的叶子节点重新组织为T个独立的二次函数的和:
 
-$$\begin{split}Obj^{(t)} &\approx \sum_{i=1}^n \left[ g_if_t(x_i) + \frac12h_if_t^2(x_i) \right]  + \Omega(f_t) \\&= \sum_{i=1}^n \left[ g_iw_{q(x_i)} + \frac12h_iw_{q(x_i)}^2 \right] + \gamma T + \frac12 \lambda \sum_{j=1}^T w_j^2 \\&= \sum_{j=1}^T \left[(\sum_{i \in I_j}g_i)w_j + \frac12(\sum_{i \in I_j}h_i + \lambda)w_j^2 \right] + \gamma T\end{split}\tag 6$$
+$$\begin{split}Obj^{(t)} &\approx \sum_{i=1}^n \left[ g_if_t(x_i) + \frac12h_if_t^2(x_i) \right]  + \Omega(f_t) \\ &= \sum_{i=1}^n \left[ g_iw_{q(x_i)} + \frac12h_iw_{q(x_i)}^2 \right] + \gamma T + \frac12 \lambda \sum_{j=1}^T w_j^2 \\ &= \sum_{j=1}^T \left[(\sum_{i \in I_j}g_i)w_j + \frac12(\sum_{i \in I_j}h_i + \lambda)w_j^2 \right] + \gamma T\end{split}\tag 6$$
 
 定义$G_j=\sum_{i \in I_j}g_i$,$H_j=\sum_{i \in I_j}h_i$,则等式(6)可写为:
 
-$Obj^{(t)} = \sum_{j=1}^T \left[G_iw_j + \frac12(H_i + \lambda)w_j^2 \right] + \gamma T​$
+$Obj^{(t)} = \sum_{j=1}^T \left[G_iw_j + \frac12(H_i + \lambda)w_j^2 \right] + \gamma T$
 
 假设树的结构是固定的，即函数$q(x)$确定，令函数$Obj^(t)$的一阶导数等于0，即可求得叶子节点$j$对应的值为:
 
