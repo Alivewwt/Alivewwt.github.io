@@ -4,14 +4,14 @@ title:      "GBDT算法原理初探"
 subtitle:   "集成学习"
 date:       2018-05-26 11:00:00
 author:     "Wwt"
-header-img: "img/GBDT/bg.png"
+header-img: "/img/GBDT/bg.png"
 catalog: true
 tags:   
     - 机器学习
     - 集成学习
 ---
 
-> 本文参照博客<GBDT算法原理深入解析>，部分内容略微修改
+> 本文参照博客《GBDT算法原理深入解析》，部分内容略微修改
 
 
 
@@ -206,6 +206,6 @@ $Gain=\frac12 \left[ \frac{G_L^2}{H_L+\lambda} + \frac{G_R^2}{H_R+\lambda} - \fr
 
 ### 参考
 
->[GBDT 算法：原理篇]<https://cloud.tencent.com/developer/article/1005611>
+>[GBDT 算法：原理篇](https://cloud.tencent.com/developer/article/1005611)
 >
 >[GBDT 算法原理深入解析](https://blog.csdn.net/yangxudong/article/details/53872141)
