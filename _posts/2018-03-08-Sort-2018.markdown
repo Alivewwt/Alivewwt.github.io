@@ -202,6 +202,29 @@ public void quickSort(int nums[],int low,int high){
       quickSort(nums,middle+1,high);//对高字段表进行递归排序
     }
 }
+//非递归
+public void quickSort1(int nums[],int low,int high){
+  if(nums==null||low<0||high<0)
+    return ;
+	Stack<Integer> s=new Stack<>();
+			s.push(0); //先进后出
+			s.push(high);
+			while(!s.isEmpty()){
+				if(low>high)
+					continue;
+				int right=s.pop();
+				int left=s.pop();
+				int index=partition(nums, left, right);
+				if(left<index-1){
+					s.push(left);
+					s.push(index-1);
+				}
+				if(index+1<right){
+					s.push(index+1);
+					s.push(right);
+				}
+			}
+}
 //快速排序提供方法调用
 public void quick(int []nums){
 	if(nums.length>0){
