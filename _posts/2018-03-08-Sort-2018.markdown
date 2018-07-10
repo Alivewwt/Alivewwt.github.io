@@ -204,8 +204,8 @@ public void quickSort(int nums[],int low,int high){
 }
 //非递归
 public void quickSort1(int nums[],int low,int high){
-  if(nums==null||low<0||high<0)
-    return ;
+  	if(nums==null||low<0||high<0)
+    	return ;
 	Stack<Integer> s=new Stack<>();
 			s.push(0); //先进后出
 			s.push(high);
