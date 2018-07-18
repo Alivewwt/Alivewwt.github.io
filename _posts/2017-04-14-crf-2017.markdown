@@ -9,6 +9,7 @@ catalog: true
 tags:
     - CRF
     - 维特比算法
+    - 机器学习
 ---
 #### 随机场
 

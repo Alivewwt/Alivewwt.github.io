@@ -8,6 +8,7 @@ header-img: "img/bg/beiyesi.jpg"
 catalog: true
 tags:	
     - 贝叶斯分类
+    - 机器学习
 ---
 
 ​	贝叶斯分类是一类分类算法的总称，这类算法均以贝叶斯定理为基础，故统称为贝叶斯分类。

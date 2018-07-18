@@ -9,7 +9,6 @@ catalog: true
 tags:   
     - Keras
     - 神经网络框架
-    - 网络配置和数据预处理
 ---
 ### 网络配置
 

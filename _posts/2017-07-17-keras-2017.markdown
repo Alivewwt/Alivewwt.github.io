@@ -9,7 +9,6 @@ catalog: true
 tags:   
     - Keras
     - 神经网络框架
-    - 模型
 ---
 ### Keras简介
 
