@@ -140,7 +140,7 @@ $$\begin{split}Obj^{(t)} &\approx \sum_{i=1}^n \left[ g_if_t(x_i) + \frac12h_if_
 
 $Obj^{(t)} = \sum_{j=1}^T \left[G_iw_j + \frac12(H_i + \lambda)w_j^2 \right] + \gamma T$
 
-假设树的结构是固定的，即函数$q(x)$确定，令函数$Obj^(t)$的一阶导数等于0，即可求得叶子节点$j$对应的值为:
+假设树的结构是固定的，即函数$q(x)$确定，令函数$Obj^{(t)}$的一阶导数等于0，即可求得叶子节点$j$对应的值为:
 
 $$w_j^*=-\frac{G_j}{H_j+\lambda} \tag 7$$
 
