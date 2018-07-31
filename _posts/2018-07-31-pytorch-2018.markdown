@@ -10,7 +10,7 @@ tags:
     - Pytorh基础
 ---
 
->本文参照github项目chenyuntc <pytorch-book>，部分内容略微修改,仅作学习参考使用
+>本文参照chenyuntc 的github项目  pytorch-book，部分内容略微修改,仅作学习参考使用
 ### Pytorch基础
 
 #### Tensor
