@@ -1,0 +1,256 @@
+---
+layout:     post
+title:      "Pytorch学习"
+subtitle:   "Pytorch基础"
+date:       2018-07-31 11:00:00
+author:     "Wwt"
+header-img: "img/pytorch/bg.png"
+catalog: true
+tags:   
+    - Pytorh基础
+---
+
+>本文参照github项目chenyuntc <pytorch-book>，部分内容略微修改,仅作学习参考使用
+### Pytorch基础
+
+#### Tensor
+
+Tensor 是Pytorch中重要的数据结构，可以认为是一个高维数组。它可以是一个数（标量）、一维数组（向量）、二维数组（矩阵）以及更高维的数组。Tensor和Numpy的ndarrays类似，但Tensor可以使用GPU进行加速。Tensor的使用和Numpy及Matlab的接口十分相似。
+
+```python
+from __future__ import print_function
+import torch as t
+
+# 构建 5x3 矩阵，只是分配了空间，未初始化
+x = t.Tensor(5, 3)  
+x
+
+1.00000e-07 *
+  0.0000  0.0000  5.3571
+  0.0000  0.0000  0.0000
+  0.0000  0.0000  0.0000
+  0.0000  5.4822  0.0000
+  5.4823  0.0000  5.4823
+[torch.FloatTensor of size 5x3]1.00000
+```
+
+```python
+# 使用[0,1]均匀分布随机初始化二维数组
+x = t.rand(5, 3)  
+x
+ 0.3673  0.2522  0.3553
+ 0.0070  0.7138  0.0463
+ 0.6198  0.6019  0.3752
+ 0.4755  0.3675  0.3032
+ 0.5824  0.5104  0.5759
+[torch.FloatTensor of size 5x3]
+print(x.size()) # 查看x的形状
+torch.Size([5, 3])
+x.size()[1], x.size(1) # 查看列的个数, 两种写法等价
+```
+
+```python
+y = t.rand(5, 3)
+# 加法的第一种写法
+x + y
+ 0.4063  0.7378  1.2411
+ 0.0687  0.7725  0.0634
+ 1.1016  1.4291  0.7324
+ 0.7604  1.2880  0.4597
+ 0.6020  1.0124  1.0185
+print('最初y')
+print(y)
+
+print('第一种加法，y的结果')
+y.add(x) # 普通加法，不改变y的内容
+print(y)
+
+print('第二种加法，y的结果')
+y.add_(x) # inplace 加法，y变了
+print(y)
+[torch.FloatTensor of size 5x3]
+注意，函数名后面带下划线_ 的函数会修改Tensor本身。例如，x.add_(y)和x.t_()会改变 x，但x.add(y)和x.t()返回一个新的Tensor， 而x不变。
+```
+
+|              函数               | 功能                                                  |
+| :-----------------------------: | ----------------------------------------------------- |
+| index_select(input, dim, index) | 在指定维度dim上选取，比如选取某些行、某些列           |
+|   masked_select(input, mask)    | 例子如上，a[a>0]，使用ByteTensor进行选取              |
+|         non_zero(input)         | 非0元素的下标                                         |
+|    gather(input, dim, index)    | 根据index，在dim维度上选取数据，输出的size与index一样 |
+
+
+
+##### 常用Tensor操作
+
+ 通过`tensor.view`方法可以调整tensor的形状，但必须保证调整前后元素总数一致。`view`不会修改自身的数据，返回的新tensor与源tensor共享内存，也即更改其中的一个，另外一个也会跟着改变。在实际应用中可能经常需要添加或减少某一维度，这时候`squeeze`和`unsqueeze`两个函数就派上用场了。 
+
+```python
+a=t.arange(0,6)
+a.view(2,3)
+0  1  2
+ 3  4  5
+[torch.FloatTensor of size 2x3]
+b = a.view(-1, 3) # 当某一维为-1的时候，会自动计算它的大小
+b
+ 0  1  2
+ 3  4  5
+[torch.FloatTensor of size 2x3]
+
+b.unsqueeze(1) # 注意形状，在第1维（下标从0开始）上增加“１”
+(0 ,.,.) = 
+  0  1  2
+
+(1 ,.,.) = 
+  3  4  5
+[torch.FloatTensor of size 2x1x3]
+b.unsqueeze(-2) # -2表示倒数第二个维度
+(0 ,.,.) = 
+  0  1  2
+
+(1 ,.,.) = 
+  3  4  5
+[torch.FloatTensor of size 2x1x3]
+c = b.view(1, 1, 1, 2, 3)
+c.squeeze(0) # 压缩第0维的“１”
+(0 ,0 ,.,.) = 
+  0  1  2
+  3  4  5
+[torch.FloatTensor of size 1x1x2x3]
+c.squeeze() # 把所有维度为“1”的压缩
+ 0  1  2
+ 3  4  5
+[torch.FloatTensor of size 2x3]
+```
+
+`resize`是另一种可用来调整`size`的方法，但与`view`不同，它可以修改tensor的大小。如果新大小超过了原大小，会自动分配新的内存空间，而如果新大小小于原大小，则之前的数据依旧会被保存，看一个例子。 
+
+```
+b.resize_(1, 3)
+b
+ 0  100    2
+[torch.FloatTensor of size 1x3]
+b.resize_(3, 3) # 旧的数据依旧保存着，多出的大小会分配新空间
+b
+0.0000e+00  1.0000e+02  2.0000e+00
+ 3.0000e+00  4.0000e+00  5.0000e+00
+ 4.1417e+36  4.5731e-41  6.7262e-44
+[torch.FloatTensor of size 3x3]
+```
+
+##### 索引操作
+
+Tensor支持与numpy.ndarray类似的索引操作，语法上也类似，下面通过一些例子，讲解常用的索引操作。如无特殊说明，索引出来的结果与原tensor共享内存，也即修改一个，另一个会跟着修改。 
+
+```python
+a = t.randn(3, 4)
+a
+ 0.2355  0.8276  0.6279 -2.3826
+ 0.3533  1.3359  0.1627  1.7314
+ 0.8121  0.3059  2.4352  1.4577
+[torch.FloatTensor of size 3x4]
+a[0] # 第0行(下标从0开始)
+ 0.2355
+ 0.8276
+ 0.6279
+-2.3826
+a[:, 0] # 第0列
+[torch.FloatTensor of size 4]
+ 0.2355
+ 0.3533
+ 0.8121
+[torch.FloatTensor of size 3]
+a[0][2] # 第0行第2个元素，等价于a[0, 2]
+0.6279084086418152
+a[0, -1] # 第0行最后一个元素
+-2.3825833797454834
+a[:2] # 前两行
+ 0.2355  0.8276  0.6279 -2.3826
+ 0.3533  1.3359  0.1627  1.7314
+[torch.FloatTensor of size 2x4]
+a[:2, 0:2] # 前两行，第0,1列
+ 0.2355  0.8276
+ 0.3533  1.3359
+[torch.FloatTensor of size 2x2]
+print(a[0:1,:2]) #第0行，前两列
+print(a[0,:2]) #注意两者的区别：形状不同
+0.2355  0.8276
+[torch.FloatTensor of size 1x2]
+ 0.2355
+ 0.8276
+[torch.FloatTensor of size 2]
+```
+
+##### 归并操作
+
+此类操作会使输出形状小于输入形状，并可以沿着某一维度进行指定操作。如加法`sum`，既可以计算整个tensor的和，也可以计算tensor中每一行或每一列的和 。
+
+|         函数         |        功能         |
+| :------------------: | :-----------------: |
+| mean/sum/median/mode | 均值/和/中位数/众数 |
+|      norm/dist       |      范数/距离      |
+|       std/var        |     标准差/方差     |
+|    cumsum/cumprod    |      累加/累乘      |
+
+以上大多数函数都有一个参数**dim**，用来指定这些操作是在哪个维度上执行的。关于dim(对应于Numpy中的axis)的解释众说纷纭，这里提供一个简单的记忆方式：
+
+假设输入的形状是(m, n, k)
+
+- 如果指定dim=0，输出的形状就是(1, n, k)或者(n, k)
+- 如果指定dim=1，输出的形状就是(m, 1, k)或者(m, k)
+- 如果指定dim=2，输出的形状就是(m, n, 1)或者(m, n) 
+
+size中是否有"1"，取决于参数`keepdim`，`keepdim=True`会保留维度`1`。注意，以上只是经验总结，并非所有函数都符合这种形状变化方式，如`cumsum`。
+
+```python
+b = t.ones(2, 3)
+b.sum(dim = 0, keepdim=True)
+ 2  2  2
+[torch.FloatTensor of size 1x3]
+# keepdim=False，不保留维度"1"，注意形状
+b.sum(dim=0, keepdim=False)
+ 2
+ 2
+ 2
+[torch.FloatTensor of size 3]
+b.sum(dim=1)
+ 3
+ 3
+[torch.FloatTensor of size 2]
+```
+
+####  Autograd:自动微分
+
+深度学习的算法本质上是通过反向传播求导数，而PyTorch的**Autograd**模块则实现了此功能。在Tensor上的所有操作，Autograd都能为它们自动提供微分，避免了手动计算导数的复杂过程 。
+
+`autograd.Variable`是Autograd中的核心类，它简单封装了Tensor，并支持几乎所有Tensor有的操作。Tensor在被封装为Variable之后，可以调用它的`.backward`实现反向传播，自动计算所有梯度 。
+
+```python
+from torch.autograd import Variable
+# 使用Tensor新建一个Variable
+x = Variable(t.ones(2, 2), requires_grad = True)
+x
+Variable containing:
+ 1  1
+ 1  1
+[torch.FloatTensor of size 2x2]
+y = x.sum()
+Variable containing:
+ 4
+[torch.FloatTensor of size 1]
+y
+y.grad_fn
+y.backward() # 反向传播,计算梯度
+# y = x.sum() = (x[0][0] + x[0][1] + x[1][0] + x[1][1])
+# 每个值的梯度都为1
+x.grad
+Variable containing:
+ 1  1
+ 1  1
+[torch.FloatTensor of size 2x2]
+注意：grad在反向传播过程中是累加的(accumulated)，这意味着每一次运行反向传播，梯度都会累加之前的梯度，所以反向传播之前需把梯度清零。
+```
+
+### 参考
+
+> [pytorch-book](https://github.com/chenyuntc/pytorch-book)
