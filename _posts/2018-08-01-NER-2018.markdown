@@ -1,6 +1,6 @@
 layout:     post
 title:      "基于神经网络的实体识别和关系抽取联合学习"
-subtitle:   "集成学习"
+subtitle:   "命名实体识别"
 date:       2018-08-01 10:00:00
 author:     "Wwt"
 header-img: "img/jointNER/bg.png"
