@@ -82,7 +82,7 @@ Attention目前基本上已经是seq2seq模型的“标配”模块了，它的�
 
 具体来说，在每一步预测时，我们得到总向量$x$（如前面所述，它应该是decoder当前的隐层向量、encoder的编码向量、当前decoder与encoder的Attention编码三者的拼接），然后接入到全连接层，最终得到一个大小为 $\mid V \mid$的0/1向量$\boldsymbol{\chi}=(\chi_1,\chi_2,\dots,\chi_{\mid V \mid})$，其中$\chi_i=1$意味着该词在文章中出现过，否则$\chi_i=0$。将这样的一个0/1向量经过一个缩放平移层得到：
 
-$\hat{\boldsymbol{y}}=\boldsymbol{s}\otimes \boldsymbol{\chi} + \boldsymbol{t}=(s_1\chi_1+t_1, s_2\chi_2+t_2, \dots, s_{\mid V\mid}\chi_{mid V \mid}+t_{\mid V\mid})\tag{3} $
+$\hat{\boldsymbol{y}}=\boldsymbol{s}\otimes \boldsymbol{\chi} + \boldsymbol{t}=(s_1\chi_1+t_1, s_2\chi_2+t_2, \dots, s_{\mid V\mid}\chi_{\mid V \mid}+t_{\mid V\mid})\tag{3} $
 
 其中$s,t$为训练参数，然后将这个向量与原来的$y$取平均后才做softmax
 
