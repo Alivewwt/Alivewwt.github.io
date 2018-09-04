@@ -9,8 +9,10 @@ catalog: true
 tags:   
     - seq2seq
     - 标题生成
+
 ---
 
+> 本文摘自博客《[玩转Keras之seq2seq自动生成标题](https://spaces.ac.cn/archives/5861)》，部分内容稍作修改
 
 seq2seq是NLP与深度学习结合的经典之作，可以做的事情非常多，我挑选的是比较简单的根据文章内容生成标题（中文），也可以理解为自动摘要的一种。
 
