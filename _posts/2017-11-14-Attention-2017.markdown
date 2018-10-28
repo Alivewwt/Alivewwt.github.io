@@ -105,6 +105,10 @@ $$Attention(\boldsymbol{q}_t,\boldsymbol{K},\boldsymbol{V}) = \sum_{s=1}^m \frac
 
 **事实上这种Attention的定义并不新鲜，但由于Google的影响力，我们可以认为现在是更加正式地提出了这个定义，并将其视为一个层地看待；此外这个定义只是注意力的一种形式，还有一些其他选择，比如query跟key的运算方式不一定是点乘（还可以是拼接后再内积一个参数向量），甚至权重都不一定要归一化，等等**。
 
+多头attention(Mutli-head attention) ,Query,Key,Value首先经过一个线性变换，然后输入到缩放点积attention,注意这里要做h次，其实也就是所谓的多头，每一次算一个投。而且每次Q,K,V进行线性变换的参数$W$是不一样的。然后将h次的放缩点积attention 结果进行拼接，再进行一次线性变换得到的值作为多头attention的结果。可以看到，google提出来的多头attention的不同之处在于进行了h次计算而不仅仅计算一次，论文中说到这样的好处是可以允许模型在不同的表示空间里学到相关的信息。
+
+self-attention可以是一般的attention的一种特殊情况，在self-attention中，$Q=K=V$每个序列中的单元和该序列中所有单元进行attention计算。Google提出的多头attention通过计算多次来捕获不同子空间上的相关信息。self-attention的特点在于无视词之间的距离直接计算依赖关系，能够学习一个句子的内部结构，实现也较为简单并行可以并行计算。
+
 ### 序列中的Attention
 
 Attention机制的基本思想是，打破了**传统编码器-解码器结构在编解码结构时都依赖于内部一个固定长度向量的限制。**
