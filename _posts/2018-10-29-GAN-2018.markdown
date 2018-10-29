@@ -20,7 +20,7 @@ tags:
 
 那么，如果有数据集$S={x1,..xn}$，如何建立一个关于这个类型数据的生成模型呢？最简单的方法就是：假设这些数据的分布$P${X}服从$g(x;\theta)$，在观测数据上通过最大化似然函数$\theta$的值，即最大似然法：
 
-$max_{theta}\sum_{i=1}^nlogg(x_i;\theta)$
+$max_{\theta}\sum_{i=1}^nlogg(x_i;\theta)$
 
 ### 工作原理
 
