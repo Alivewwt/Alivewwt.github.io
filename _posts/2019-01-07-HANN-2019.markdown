@@ -128,7 +128,7 @@ Bi-GRU是基本的事件抽取模型，没使用文档级别的向量。
 
 DEEB-RNN模型使用了文档向量，没使用有监督机制来训练模型，超参数$\lambda$和$\mu$均为0。
 
-DEEB-RNN1/2/3使用了gold注意力信号作为有监督信息。具体来说，DEEB-RNN1只使用了gold词级别的注意力信号$$（\lambda=1, \mu=0）$$，DEEB-RNN2只使用了gold 句子级别的注意力信号$$(\lambda=0,\mu=1)$$,DEEB-RNN3 使用了goldc词级别和句子级别的注意力信号$$（\lambda=1,\mu=1）$$。
+DEEB-RNN1/2/3使用了gold注意力信号作为有监督信息。具体来说，DEEB-RNN1只使用了gold词级别的注意力信号$$（\lambda=1, \mu=0）$$，DEEB-RNN2只使用了gold 句子级别的注意力信号$$(\lambda=0,\mu=1)$$,DEEB-RNN3 使用了gold词级别和句子级别的注意力信号$$（\lambda=1,\mu=1）$$。
 
 ![3](/img/HANN/3.png)
 
