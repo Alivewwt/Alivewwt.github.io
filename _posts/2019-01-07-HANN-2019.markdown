@@ -78,11 +78,11 @@ $$s_i=\sum\alpha_{it}h_{it}$$
 
 $$\overrightarrow{h_i}=\overrightarrow{GRU}(s_i),i\in[1,L]$$
 
-$$\overleftarrow{h_i}=\overleftarrow{GRU}(s_i),i\in[L,1]$$
+$$\overleftarrow{h_i}=\overleftarrow{GRU}(s_i),i\in[L,1]​$$
 
-对应给定的句子$s_i$，相应的句子表示
+对应给定的句子$s_i​$，相应的句子表示
 
-$$h_i=[\overrightarrow{h_i},\overleftarrow{h_i}]$$。
+$$\ h_i=[\overrightarrow{h_i},\overleftarrow{h_i}]$$。
 
 这样，可以包含两个方向的上下文信息的表示。
 
