@@ -199,7 +199,9 @@ NLP 领域中的一大难题是生成自然语言，而这是 RNN 另一个恰�
 
 在 Ilya Sutskever 等人 2014 年的研究《Sequence to Sequence Learning with Neural Networks》中，作者提出了一种通用深度 LSTM 编码器-解码器框架，可以实现序列之间的映射。使用一个 LSTM 将源序列编码为定长向量，源序列可以是机器翻译任务中的源语言、问答任务中的问题或对话系统中的待回复信息。然后将该向量作为另一个 LSTM（即解码器）的初始状态。在推断过程中，解码器逐个生成 token，同时使用最后生成的 token 更新隐藏状态。束搜索通常用于近似最优序列。
 
-该研究使用了一个 4 层 LSTM 在机器翻译任务上进行端到端实验，结果颇具竞争力。《A Neural Conversational Model》使用了同样的编码器-解码器框架来生成开放域的有趣回复。使用 LSTM 解码器处理额外信号从而获取某种效果现在是一种普遍做法了。《A Persona-Based Neural Conversation Model》提出用解码器处理恒定人物向量（constant persona vector），该向量捕捉单个说话人的个人信息。在上述案例中，语言生成主要基于表示文本输入的语义向量。类似的框架还可用于基于图像的语言生成，使用视觉特征作为 LSTM 解码器的初始状态（图 12）。
+该研究使用了一个 4 层 LSTM 在机器翻译任务上进行端到端实验，结果颇具竞争力。《A Neural Conversational Model》使用了同样的编码器-解码器框架来生成开放域的有趣回复。使用 LSTM 解码器处理额外信号从而获取某种效果现在是一种普遍做法了。《A Persona-Based Neural Conversation Model》提出用解码器处理恒定人物向量（constant persona vector），该向量捕捉单个说话人的个人信息。在上述案例中，语言生成主要基于表示文本输入的语义向量。类似的框架还可用于基于图像的语言生成，使用视觉特征作为 LSTM 解码器的初始状态，如下图。
+
+![9](/img/NLPoverview_1/9.jpg)
 
 视觉 QA 是另一种任务，需要基于文本和视觉线索生成语言。2015 年的论文《Ask Your Neurons: A Neural-based Approach to Answering Questions about Images》是首个提供端到端深度学习解决方案的研究，他们使用 CNN 建模输入图像、LSTM 建模文本，从而预测答案（一组单词）。
 
