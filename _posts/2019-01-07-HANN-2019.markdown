@@ -35,14 +35,23 @@ $$h_t=(1-z_t) \odot h_{t-1}+z_t\odot\hat{h_t}$$
 
 更新门(update gate)$z_t$是用来决定有多少过去的信息被保留，以及有多少新信息被加进来：
 
-$$z_t= \sigma(W_zx_t+U_zh_{t-1}+b_z)$$
+$$
+z_t= \sigma(W_zx_t+U_zh_{t-1}+b_z)
+$$
+
 
 这里$x_t$是在时刻$t$输入的单词词向量，候选状态$\hat{h_t}$的计算方法和普通的RNN相似：
-$$\hat{h_t}=tanh(W_hx_t+r_t\odot(U_hh_{t-1})+b_h)$$
+$$
+\hat{h_t}=tanh(W_hx_t+r_t\odot(U_hh_{t-1})+b_h)
+$$
+
 
 重置门$r_t$决定有多少过去的信息作用于候选状态，如果$r_t$是0，即忘记之前的所有状态：
 
-$$r_t=\sigma(W_rx_t+U_rh_{t-1}+b_r)$$
+$$
+r_t=\sigma(W_rx_t+U_rh_{t-1}+b_r)
+$$
+
 
 #### 层次化
 
@@ -62,13 +71,19 @@ $$\overleftarrow{h_{it}}=\overleftarrow{GRU}(x_{it})$$
 
 attention机制的目的是要把一个句子中，对句子含义最重要，贡献最大的词语找出来。我们通过将$h_{it}$输入到一个单层的全连接层中得到结果$u_{it}$作为$h_{it}$的隐含表示。
 
-$$u_{it}=tanh(W_wh_{it}+b_w)$$
+$$
+u_{it}=tanh(W_wh_{it}+b_w)
+$$
+
 
 为了衡量单词的重要性，我们用$u_{it}$和一个随机初始化的上下文向量$u_w$的相似度来表示，然后经过softmax操作获得了一个归一化的attention权重矩阵$\alpha_{(it)}$，代表句子$i$中第$t$个词的权重。
 
-$$\alpha_{it}=\frac{exp(u_{it}^T)u_w}{\sum exp(u_{it}^Tu_w)}$$
+$$
+\alpha_{it}=\frac{exp(u_{it}^T)u_w}{\sum exp(u_{it}^Tu_w)}
+$$
 
-得到了attention权重矩阵之后，句子向量$s_i$可以看做这些词向量的加权求和。这里的上下文向量$u_w$是在训练网络过程中学习获得的。我们可以把$u_w$当做一种询问的高级表示，比如“哪些词含有比较重要的信息？”
+
+得到了attention权重矩阵之后，句子向量$s_i​$可以看做这些词向量的加权求和。这里的上下文向量$u_w​$是在训练网络过程中学习获得的。我们可以把$u_w​$当做一种询问的高级表示，比如“哪些词含有比较重要的信息”?
 
 $$s_i=\sum\alpha_{it}h_{it}$$
 
@@ -76,13 +91,16 @@ $$s_i=\sum\alpha_{it}h_{it}$$
 
 得到了句子向量表示$s_i$以后，可以用类似的办法获得文档向量：
 
-$$\overrightarrow{h_i}=\overrightarrow{GRU}(s_i),i\in[1,L]$$
+$$\overrightarrow{h_i}=\overrightarrow{GRU}(s_i),i\in[1,L]​$$
 
 $$\overleftarrow{h_i}=\overleftarrow{GRU}(s_i),i\in[L,1]​$$
 
 对应给定的句子$s_i​$，相应的句子表示
 
-$$\ h_i=[\overrightarrow{h_i},\overleftarrow{h_i}]$$。
+$$
+\ h_i=[\overrightarrow{h_i},\overleftarrow{h_i}]
+$$
+
 
 这样，可以包含两个方向的上下文信息的表示。
 
@@ -90,13 +108,13 @@ $$\ h_i=[\overrightarrow{h_i},\overleftarrow{h_i}]$$。
 
 和word level 的attention类似，对于document，也有一个句子级别的上下文向量$u_s$，来衡量一个句子相对于document的重要性。
 
-$$u_i=tanh(W_sh_i+b_s)$$
+$$u_i=tanh(W_sh_i+b_s)​$$
 
 $$\alpha_i=\frac{exp(u_i^Tu_s)}{\sum_texp(u_t^Tu_s)}$$
 
-$$v=\sum_i\alpha_ih_i$$
+$$v=\sum_i\alpha_ih_i​$$
 
-在这里我们就获得了整篇文章的向量表示$v$，最后可以使用全连接的softmax层进行分类。
+在这里我们就获得了整篇文章的向量表示$v​$，最后可以使用全连接的softmax层进行分类。
 
 ### 事件抽取领域的拓展
 
