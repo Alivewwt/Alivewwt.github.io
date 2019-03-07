@@ -169,7 +169,7 @@ LSTM 比简单 RNN 多了『遗忘』门，其独特机制帮助该网络克服�
 
 与原版 RNN 不同，LSTM 允许误差通过无限数量的时间步进行反向传播。它包含三个门：输入门、遗忘门和输出门，并通过结合这三个门来计算隐藏状态，如下面的公式所示:
 
-$$\begin {align} x&=\begin{bmatrix}h_{t-1} \\x_t \end{bmatrix} \\ f_t&=\sigma(W_fx+b_f)  \\i_t&=\sigma(w_ix+b)\\o_t&=\sigma(W_o+b_o)\\ c_t&=f_t \bigodot c_{t-1} +i_t\bigodot tanh(W_cX+b_c)\\h_t&=o_t\bigodot tanh(c_t)&\end{align}​$$
+$$\begin {align} x&=\begin{bmatrix}h_{t-1} \\x_t \end{bmatrix} \\ f_t&=\sigma(W_fx+b_f)  \\i_t&=\sigma(w_ix+b)\\o_t&=\sigma(W_ox+b_o)\\ c_t&=f_t \bigodot c_{t-1} +i_t\bigodot tanh(W_cX+b_c)\\h_t&=o_t\bigodot tanh(c_t)&\end{align}$$
 
 #### 3.门控循环单元（GRU）
 
