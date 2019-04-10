@@ -39,7 +39,7 @@ tags:
 
 事件抽取任务的结构包含五个部分：句子编码，句子表示，实体抽取，触发词抽取和论元抽取，这五个部分按照线性排列顺序（从左到右），前两个部分是为了将输入句子$W$转换成隐藏表示，后面的三个部分使用这隐藏表示来执行EMD、ED和APR三个任务。模型结构如下图所示：
 
-![1](/Users/wuwt/Desktop/1.png)
+![1](img/Joint3EE/1.png)
 
 #### 句子编码
 
@@ -54,16 +54,16 @@ tags:
 
 针对事件抽取任务，我们对$W$进行解码，目标是为了联合预测E，T和A的标签，最大化三个预测任务的联合概率：
 $$
-\begin{align}P(A,T,E|W) &= P(E|W)*P(A,T|E,W)\\
-&=P(E|W)*P(a_1,t_1|E,W)\\
-&*P(a_2,t_2|E,W,a<2,t<2)\\
+\begin{align}P(A,T,E\mid W) &= P(E \mid W)*P(A,T\mid E,W)\\
+&=P(E\mid W)*P(a_1,t_1\mid E,W)\\
+&*P(a_2,t_2\mid E,W,a<2,t<2)\\
 &...\\
-&*P(a_n,t_n|E,W,a<n,t<n)
+&*P(a_n,t_n\mid E,W,a<n,t<n)
 \end{align}
 $$
 其中$a_i$表示论元角色矩阵$A$中的第$i$行角色标签。
 
-基于上述分解，我们首先预测句子中每个词的实体类型（即计算EMD中的$P(E|W)$），然后，我们从左向右扫描句子的每个词，计算概率$P(a_i,t_i|E,W,a<i,t<i)$来预测触发词和论元。需要注意的是，对$P(a_i,t_i|E,W,a<i,t<i)$建模能够使用来自$a<i$和$t<i$的信息来揭示出现在句子中的多个事件之间的相互依赖关系，从而可以更好地预测触发词和论元。
+基于上述分解，我们首先预测句子中每个词的实体类型（即计算EMD中的$P(E \mid W)$），然后，我们从左向右扫描句子的每个词，计算概率$P(a_i,t_i\mid E,W,a<i,t<i)$来预测触发词和论元。需要注意的是，对$P(a_i,t_i \mid E,W,a<i,t<i)$建模能够使用来自$a<i$和$t<i$的信息来揭示出现在句子中的多个事件之间的相互依赖关系，从而可以更好地预测触发词和论元。
 
 本文中，我们将参考局部信息$D_i$来表示句子中的块$w_i \in W$与词向量拼接在一起作为串联向量。
 
@@ -71,11 +71,11 @@ $$
 
 我们将实体类型检测的目标函数展开如下：
 $$
-P(E|W)=P(e_1|W)P(e_2|W,e<2)...P(e_n|W,e<n)
+P(E\mid W)=P(e_1\mid W)P(e_2\mid W,e<2)...P(e_n\mid W,e<n)
 $$
 我们的目标是最大化这个概率，其中
 $$
-P(e_i|W,e,i)= FF^{EMD}(R_i^{EMD})
+P(e_i\mid W,e,i)= FF^{EMD}(R_i^{EMD})
 $$
 其中：
 $$
@@ -90,24 +90,26 @@ $$
 我们将事件触发词抽取和论元抽取展开成如下目标函数，我们的目标是最大化这个目标函数：
 $$
 \begin{align}
-P(a_i,t_i|E,W,a<i,t<i)&=P(t_i|E,W,a<i,t<i)\\
-&*P(a_{i1}|E,W,a<i,t<{i+1})\\
-&*P(a_{i2}|E,W,a_i,<2,t<i+1)\\
+P(a_i,t_i\mid E,W,a<i,t<i)&=P(t_i\mid E,W,a<i,t<i)\\
+&*P(a_{i1}\mid E,W,a<i,t<{i+1})\\
+&*P(a_{i2}\mid E,W,a_i,<2,t<i+1)\\
 &...\\
-&*P(a_{in}|E,W,a_i,<n,a<i,t<i+1)
+&*P(a_{in}\mid E,W,a_i,<n,a<i,t<i+1)
 \end{align}
 $$
 其中:
 $$
-a_i<j=a_i,1,a_i,2,…,a_i,j-1\\
-P(t_i|E,W,a<i,t<i)=FF^{ED}(R_{ED}^i)\\
-P(a_{ij}|E,W,a_{i},<j,a<i,t<i+1)=FF^{ARP}(R^{ARP}_{ij})\\
-R^{ED}_i=[h_i,D_i]\\
-R^{ARP}_{ij}=[h_i,D_i,h_j,D_j,V(e^p_i),V(t^p_j),M_i,B_{ij}]
+\begin{align}
+a_i<j&=a_i,1,a_i,2,…,a_i,j-1\\
+P(t_i\mid E,W,a<i,t<i)&=FF^{ED}(R_{ED}^i)\\
+P(a_{ij} \mid E,W,a_{i},<j,a<i,t<i+1)&=FF^{ARP}(R^{ARP}_{ij})\\
+R^{ED}_i&=[h_i,D_i]\\
+R^{ARP}_{ij}&=[h_i,D_i,h_j,D_j,V(e^p_i),V(t^p_j),M_i,B_{ij}]
+\end{align}
 $$
 其中：
 
-+ $e_i$:第$i$个词的实体类型
++ $e_i$:第$i​$个词的实体类型
 + $t_j$: 第$j$个词的实体类型
 + $B_{ij}$:第$i$个词和第$j$个词的最短依赖树信息
 + $M_i$:第$i$个词之前出现的事件类型和论元语义角色
@@ -118,9 +120,9 @@ $$
 我们训练联合模型通过优化负对数似然函数$C(A,T,E,W)=-logP(A,T,E|W)$,为了将三个任务EMD、ED和APR的损失函数汇合在一起，我们将损失函数定义成以下形式：
 $$
 \begin{align}
-C^*(A,T,E,W)&= -\alpha \sum^n_{i=1}logP(e_i|W,e<i)\\
-&-\beta \sum^n_{i=1}logP(t_i|E,W,a<i,t<i)\\
-&-\gamma \sum^n_{i=1} \sum^n_{j=1}logP(a_{ij}|E,W,a_i,<j,a<i,t<{j+1})
+C^*(A,T,E,W)&= -\alpha \sum^n_{i=1}logP(e_i\mid W,e<i)\\
+&-\beta \sum^n_{i=1}logP(t_i\mid E,W,a<i,t<i)\\
+&-\gamma \sum^n_{i=1} \sum^n_{j=1}logP(a_{ij}\mid E,W,a_i,<j,a<i,t<{j+1})
 \end{align}
 $$
 其中，$\alpha,\beta,\gamma$是超参数，使用随机梯度下降算法来优化损失函数。
@@ -131,13 +133,13 @@ $$
 
 本文在ACE 2005的英文语料库上进行对比实验得到以下结果，
 
-![2](/Users/wuwt/Desktop/2.png)
+![2](img/Joint3EE/2.png)
 
 从表中可以看出，本文提出的联合训练模型在触发词识别和分类以及论元识别和分类的任务中都达到了最优的F1值。
 
 #### 实体抽取结果
 
-![3](/Users/wuwt/Desktop/3.png)
+![3](img/Joint3EE/3.png)
 
 实验结果证明，本文提出的模型在实体类型检测上的F1值同样达到了最优。
 
