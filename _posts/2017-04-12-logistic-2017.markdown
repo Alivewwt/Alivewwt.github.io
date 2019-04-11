@@ -152,7 +152,7 @@ $$\begin{align} \frac{δE}{δw_i}=&\frac{δ\frac{1}{2}\sum_{d_\in D}(t_d-o_d)^2}
 
 
 $$
-Δ w_i=\eta \sum_{d \in D}(t_d-o_d)x_{id}\quad(7)
+Δ w_i=\eta \sum_{d \in D}(o_d-t_d)x_{id}\quad(7)
 $$
 
 
