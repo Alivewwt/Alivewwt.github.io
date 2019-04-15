@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Word2Vec之Skip-Gram模型"
+title:      "Word2Vec之Skip-Gram模型--上"
 subtitle:   "Skip-Gram"
 date:       2019-03-22 10:00:00
 author:     "Wwt"
