@@ -89,7 +89,7 @@ tags:
 
 首先，它指出，对上下文相关的词向量的学习上，先前的预训练模型还不够？虽然在下游有监督任务中，encoding的方式已经是花里胡哨非常充分了，深度双向encoding基本成了许多复杂下游任务的标配。但在预训练模型上，先前的最先进模型也只是基于传统的语言模型来做，而**传统的语言模型**是单向的，即
 
-$p(s)=p(w0)*p(w1 \mid w0)*p(w2  \mid w1,w0)*p(w3 \mid w2,w1,w0)...p(wn \mid context)$
+$$p(s)=p(w0)*p(w1 \mid w0)*p(w2  \mid w1,w0)*p(w3 \mid w2,w1,w0)...p(wn \mid context)$$
 
 而且往往都很浅（想象一下LSTM堆三层就train不动了，就要上各种trick了），不然ELMo。
 
