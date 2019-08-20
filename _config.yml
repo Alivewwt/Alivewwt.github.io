@@ -2,7 +2,7 @@
 title: Wwt-blog
 SEOTitle: Wwt-blog
 header-img: img/bg/bg_index.jpg
-email: m13032536099@163.com
+email: zywtwu@163.com
 description: ""
 keyword: ""
 url: "https://alivewwt.github.io/"              # your host, for absolute URL
@@ -46,7 +46,7 @@ ba_track_id: 07529a93af5fa9f808261a1318c3aba4
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "业精于勤荒于嬉,乐于分享"
+sidebar-about-description: "不念过往，不惧未来"
 sidebar-avatar: /img/avatar-wwt.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
