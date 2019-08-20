@@ -1,6 +1,6 @@
 # Site settings
 title: Wuwt-blog
-SEOTitle: 吴文涛的博客|Wuwt-blog
+SEOTitle: 小淘的博客|Wuwt-blog
 header-img: img/bg/bg_index.jpg
 email: zywtwu@163.com
 description: ""
@@ -9,6 +9,7 @@ url: "https://alivewwt.github.io/"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 # SNS settings
+weibo_username: 734872050@qq.com
 zhihu_username: ling-du-qing-xu
 github_username: Alivewwt
 
