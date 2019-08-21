@@ -2,7 +2,7 @@
 layout: page
 description: "学习 生活 分享"
 ---
-
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 {% for post in paginator.posts %}
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
