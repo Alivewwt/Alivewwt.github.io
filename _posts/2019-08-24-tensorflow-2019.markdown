@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "基于Tensorflow实现文本分类模型"
+title:      "使用Tensorflow实现文本分类模型"
 subtitle:   "文本分类模型"
 date:       2019-08-24 10:00:00
 author:     "Wwt"
@@ -168,13 +168,12 @@ class TextCNN(object):
                 name="W"）
               #查表
             self.embedded_chars = tf.nn.embedding_lookup(self.W, self.input_x)
-       	pooled_outputs = []
+      pooled_outputs = []
     	for kernel_size in filter_sizes:
 				with.tf.variable_scope("CNN-max-pooling-%s" % kernel_size):
             conv = tf.layer.conv1d(self.embedd_chars,num_filters,kernel_size,name='conv')
             gmp = tf.reduce_max(conv,reduction_indices=[1],name='gmp')
-            pooled_outputs.append(gmp)
-            
+            pooled_outputs.append(gmp)           
       			self.h_pool = tf.concat(pooled_outputs,1)
        
        with tf.name_scope("score"):
@@ -207,9 +206,6 @@ class TextCNN(object):
 ```python
 # Parameters
 # ==================================================
-
-
-
 def preprocess():
     # Data Preparation
     # ==================================================
@@ -347,7 +343,7 @@ if __name__ == '__main__':
 
 tensorflow的训练过程，没有同keras一样简单容易操作，写起来相当复杂，对初学者不友好。我们要将数据处理好，一批一批的送入到定义好的图中，让图运行起来。需要注意的是，**tensorflow中步数(global step)是一个计数器，每训练一个batch_size的数据，步数就加一**，这样训练一轮(epoch)会有多个步数，是通过计算得来的。另外，函数sess.run()中不仅传入数据，还传入运行过程中需要返回查看的一些值，如accuracy,loss等。
 
-至此，基于tensorflow的cnn文本分类模型介绍结束。模型不难，初学者容易看懂，通过这个学会tensorflow的基本操作，基础的炼丹应该不难了，在学一些热腾腾的模型，以后还可以快乐的炼丹了。
+至此，基于tensorflow的cnn文本分类模型介绍结束。模型不难，初学者容易看懂，通过这个学会tensorflow的基本操作，基础的炼丹应该不难了，在学一些热腾腾的模型，以后可以快乐的炼丹了。
 
 现在BERT横扫各大比赛榜单，各种模型都预先使用BERT来提取特征，不会使用BERT，都不好意思说自己是搞深度学习的。所以，这里我就稍微介绍一下如何Tensorflow来加载BERT模型。
 
