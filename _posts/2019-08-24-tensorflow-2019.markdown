@@ -164,13 +164,13 @@ class TextCNN(object):
         with tf.device('/cpu:0'), tf.name_scope("embedding"):
             self.W = tf.Variable(
                 shape = [vocab_size, embedding_size],
-                embeddings,
+                initializer = tf.constant_initializer(embeddings),
                 name="W"）
               #查表
             self.embedded_chars = tf.nn.embedding_lookup(self.W, self.input_x)
       pooled_outputs = []
     	for kernel_size in filter_sizes:
-				with.tf.variable_scope("CNN-max-pooling-%s" % kernel_size):
+            with.tf.variable_scope("CNN-max-pooling-%s" % kernel_size):
             conv = tf.layer.conv1d(self.embedd_chars,num_filters,kernel_size,name='conv')
             gmp = tf.reduce_max(conv,reduction_indices=[1],name='gmp')
             pooled_outputs.append(gmp)           
