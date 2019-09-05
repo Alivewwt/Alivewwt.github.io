@@ -25,7 +25,7 @@ tags:
 
 我们的模型大致就是按照上述架构进行搭建的，使用预训练的词向量（glove.6B.100），你也可以使用其它流行的预训练词向量，如elmo或者基于BERT的预训练词向量。
 
-卷积神经网络的文本分类模型是基于tensorflow实现的，主要分下三个部分：数据预处理，模型模块，模块训练。
+卷积神经网络的文本分类模型是基于tensorflow实现的，主要分下三个部分：数据预处理，模型模块，训练模块。
 
 ### 数据预处理
 
@@ -176,9 +176,10 @@ class TextCNN(object):
                 pooled_outputs.append(gmp)           
       	self.h_pool = tf.concat(pooled_outputs,1)
        
+        num_total_filters = len(filter_size)*num_filters
        	with tf.name_scope("score"):
             # 全连接层，后面接dropout以及relu激活
-            fc = tf.layers.dense(gmp, self.config.hidden_dim, name='fc1')
+            fc = tf.layers.dense(self.h_pool, num_total_filters, name='fc1')
             fc = tf.contrib.layers.dropout(fc, self.keep_prob)
             fc = tf.nn.relu(fc)
 
@@ -240,16 +241,6 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev,pre_weights):
             grads_and_vars = optimizer.compute_gradients(cnn.loss)
             train_op = optimizer.apply_gradients(grads_and_vars, global_step=global_step)
 
-            # Keep track of gradient values and sparsity (optional)
-            grad_summaries = []
-            for g, v in grads_and_vars:
-                if g is not None:
-                    grad_hist_summary = tf.summary.histogram("{}/grad/hist".format(v.name), g)
-                    sparsity_summary = tf.summary.scalar("{}/grad/sparsity".format(v.name), tf.nn.zero_fraction(g))
-                    grad_summaries.append(grad_hist_summary)
-                    grad_summaries.append(sparsity_summary)
-            grad_summaries_merged = tf.summary.merge(grad_summaries)
-
             # 模型的保存目录
             timestamp = str(int(time.time()))
             out_dir = os.path.abspath(os.path.join(os.path.curdir, "runs", timestamp))
@@ -263,11 +254,6 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev,pre_weights):
             train_summary_op = tf.summary.merge([loss_summary, acc_summary, grad_summaries_merged])
             train_summary_dir = os.path.join(out_dir, "summaries", "train")
             train_summary_writer = tf.summary.FileWriter(train_summary_dir, sess.graph)
-
-            # Dev summaries
-            dev_summary_op = tf.summary.merge([loss_summary, acc_summary])
-            dev_summary_dir = os.path.join(out_dir, "summaries", "dev")
-            dev_summary_writer = tf.summary.FileWriter(dev_summary_dir, sess.graph)
 
             # Checkpoint directory. Tensorflow assumes this directory already exists so we need to create it
             checkpoint_dir = os.path.abspath(os.path.join(out_dir, "checkpoints"))
@@ -345,7 +331,7 @@ tensorflow的训练过程，没有同keras一样简单容易操作，写起来�
 
 至此，基于tensorflow的cnn文本分类模型介绍结束。模型不难，初学者容易看懂，通过这个学会tensorflow的基本操作，基础的炼丹应该不难了，在学一些热腾腾的模型，以后可以快乐的炼丹了。
 
-现在BERT横扫各大比赛榜单，各种模型都预先使用BERT来提取特征，不会使用BERT，都不好意思说自己是搞深度学习的。所以，这里我就稍微介绍一下如何Tensorflow来加载BERT模型。
+现在BERT横扫各大比赛榜单，各种模型都预先使用BERT来提取特征，不会使用BERT，都不好意思说自己是搞深度学习的。所以，这里我稍微介绍一下如何Tensorflow来加载BERT模型。
 
 >```python
 >#初始化BERT
@@ -364,7 +350,7 @@ tensorflow的训练过程，没有同keras一样简单容易操作，写起来�
 >encoder_last_layer = model.get_sequence_output()
 >```
 
-获得BERT的输出后，就可以愉快的将BERT输出送入到后续网络层中，进行各种风骚的操作了。
+获得BERT的输出后，就可以愉快的将BERT输出送入到后续网络层中，进行各种风骚操作了。
 
 ### 参考
 
