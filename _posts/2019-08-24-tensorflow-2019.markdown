@@ -4,7 +4,7 @@ title:      "使用Tensorflow实现文本分类模型"
 subtitle:   "文本分类模型"
 date:       2019-08-24 10:00:00
 author:     "Wwt"
-header-img: "img/tensorflow/bg.png"
+header-img: "img/tensorflow-cnn/bg.png"
 catalog: true
 tags:   
     - 文本分类
@@ -17,7 +17,7 @@ tags:
 
 模型架构如图所示：
 
-![1](/img/tensorflow/1.png)
+![1](/img/tensorflow-cnn/1.png)
 
 
 
