@@ -9,8 +9,9 @@ catalog: true
 tags:   
     - seq2seq
     - tensorflow
-
 ---
+
+>转载自[玩转Keras之seq2seq自动生成标题 ](https://kexue.fm/archives/5861),作者：苏剑林
 
 自入坑nlp以来，搞了很久的分类和序列标注任务，我都还没有真正跑过NLP与深度学习结合的经典之作--seq2seq。这几天一直都这研究这个任务，决定通过学习代码并实践一番seq2seq。
 
@@ -116,7 +117,8 @@ $$
 ### keras参考（中文标题生成）
 
 基于上面的描述，我收集了80多万篇新闻的语料，来试图训练一个自动标题的模型。简单起见，我选择了以字为基本单位，并且引入了4个额外标记，分别代表mask、unk、start、end。而encoder我使用了双层双向LSTM，decoder使用了双层单向LSTM。具体细节可以参考源码：
-https://github.com/bojone/seq2seq/blob/master/seq2seq.py
+
+>[https://github.com/bojone/seq2seq/blob/master/seq2seq.py](https://github.com/bojone/seq2seq/blob/master/seq2seq.py)
 
 ### tensorflow参考（英文标题生成）
 
@@ -151,8 +153,6 @@ https://github.com/bojone/seq2seq/blob/master/seq2seq.py
 
 #### 参考
 
->[玩转Keras之seq2seq自动生成标题 ](https://kexue.fm/archives/5861)
->
 >[Tensorflow中的Seq2Seq全家桶](https://zhuanlan.zhihu.com/p/47929039)
 >
 >[tensorflow实现](https://github.com/dongjun-Lee/text-summarization-tensorflow)
