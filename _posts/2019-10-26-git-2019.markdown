@@ -10,7 +10,11 @@ tags:
     - git
     - 基础教程
 ---
+
+
 > 转载自[Git教程 ](https://www.liaoxuefeng.com/wiki/896043488029600),部分篇幅有增删，作者：廖雪峰
+
+
 
 对于一个编程人员来说，经常涉及到代码管理，这就难免与gi t打交道了。关于git的教程，网上google一下，会出现一堆相关的文章和教程，但令人失望的是，这些教程不是难得晦涩难懂，就是就是简单的一笔带过。或者，只支离破碎地介绍几个git命令。总之，初学者很难找到一个由浅入深，学完后立即上手的教程。
 
@@ -44,7 +48,7 @@ sudo apt-get install git
 
 像上面的命令，有很多linux会很友好的告诉你git没有安装，还会告诉你如何安装git。
 
-如果你碰巧是Ubuntu Linux，通过一条$\color{red}{sudo \space apt-get \space install git}$就可以直接完成git的安装，非常简单。
+如果你碰巧是Ubuntu Linux，通过一条$\color{red}{sudo \space apt-get \space install \space git}$就可以直接完成git的安装，非常简单。
 
 #### 在Mac OS X上安装Git
 
