@@ -8,8 +8,9 @@ header-img: "img/BERT/bg.png"
 catalog: true
 tags:   
     - 语言模型
-	- 深度学习
+    - 深度学习
 ---
+
 >本文摘自夕小瑶专栏文章《[NLP的游戏规则从此改写？从word2vec,ELMo和BERT](https://zhuanlan.zhihu.com/p/47488095)》，部分内容稍作修改。
 
 还记得不久之前的机器阅读理解领域，微软和阿里在SQuAD上分别以R-Net+和SLQA超过人类，百度在MS MARCO上凭借V-Net霸榜并在BLEU上超过人类。这些网络可以说一个比一个复杂，似乎“如何设计出一个更work的task-specific的网络"变成了NLP领域政治正确的研究方向。而在这种风向下，不管word2vec也好，glove也好，fasttext也好，都只能充当一个锦上添花的作用。说好的迁移学习、预训练呢？在NLP似乎始终没成主角 。
