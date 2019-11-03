@@ -8,7 +8,7 @@ header-img: "img/xml/bg.png"
 catalog: true
 tags:   
     - python
-	- 基础教程
+    - 基础教程
 ---
 
 
