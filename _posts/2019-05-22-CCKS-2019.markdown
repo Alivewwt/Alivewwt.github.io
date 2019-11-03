@@ -9,7 +9,6 @@ catalog: true
 tags:   
     - NLP
 	- 事件抽取
-
 ---
 ### 任务描述
 
