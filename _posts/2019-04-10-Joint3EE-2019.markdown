@@ -4,7 +4,7 @@ title:      "一个模型解决实体、触发词和论元抽取任务"
 subtitle:   "one for All"
 date:       2019-04-10 10:00:00
 author:     "Wwt"
-header-img: "img/oint3EE/bg.png"
+header-img: "img/Joint3EE/bg.png"
 catalog: true
 tags:   
     - 事件抽取
