@@ -8,9 +8,8 @@ header-img: "img/keras_1/bg.jpg"
 catalog: true
 tags:   
     - Keras
-	- 基础教程
+    - 基础教程
 ---
-
 
 ### Keras简介
 
