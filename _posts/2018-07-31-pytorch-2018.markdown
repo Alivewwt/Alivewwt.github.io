@@ -7,7 +7,7 @@ author:     "Wwt"
 header-img: "img/pytorch/bg.png"
 catalog: true
 tags:   
-    - Pytorh基础
+    - 基础教程
 ---
 
 >本文参照chenyuntc 的github项目  pytorch-book，部分内容略微修改,仅作学习参考使用

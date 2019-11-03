@@ -8,8 +8,7 @@ header-img: "img/keras_1/bg.jpg"
 catalog: true
 tags:   
     - Keras
-    - 神经网络框架
-	- 编程语言
+    - 基础教程
 ---
 ### Keras的网络层
 

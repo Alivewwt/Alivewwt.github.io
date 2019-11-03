@@ -6,7 +6,7 @@ date:       2017-02-22 12:00:00
 author:     "wwt"
 header-img: "img/bg/hello_world.jpg"
 tags:
-    - SpringMVC
+    - 基础教程
 ---
 
 本文主要介绍Springmvc的框架原理，并通过一个入门程序展示搭建环境，配置以及部署。

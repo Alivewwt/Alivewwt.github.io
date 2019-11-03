@@ -6,7 +6,7 @@ date:       2017-03-12 11:00:00
 author:     "Wwt"
 header-img: "img/bg/ssm.jpg"
 tags:   
-    - SSM 框架集成
+    - 基础教程
 ---
 ​	上次我学习了一下SpringMVC ,并做了一个简单的示例程序。之后看到网上有很多ssm(springmvc,spring,maven)集成的学习示例，于是，我也打算自己动手集成ssm框架，加深一下理解。
 

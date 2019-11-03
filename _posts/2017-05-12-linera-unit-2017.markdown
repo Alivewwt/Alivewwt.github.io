@@ -8,7 +8,6 @@ header-img: "img/liner/bg.jpg"
 catalog: true
 tags:   
     - 深度学习
-    - 线性单元
 ---
 ### 线性单元
 

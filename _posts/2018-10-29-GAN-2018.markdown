@@ -7,7 +7,7 @@ author:     "Wwt"
 header-img: "img/GAN/bg.png"
 catalog: true
 tags:   
-    - GAN
+    - 对抗网络
     - 深度学习
 
 ---

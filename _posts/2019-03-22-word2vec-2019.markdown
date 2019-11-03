@@ -7,7 +7,7 @@ author:     "Wwt"
 header-img: "img/skip-gram/bg.png"
 catalog: true
 tags:   
-    - Word2Vec
+    - 语言模型
     - NLP
 
 ---

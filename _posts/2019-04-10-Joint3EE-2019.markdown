@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/Joint3EE/bg.png"
 catalog: true
 tags:   
-    - 联合模型
     - 事件抽取
 	- NLP
 ---

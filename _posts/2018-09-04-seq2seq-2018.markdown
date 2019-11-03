@@ -7,8 +7,8 @@ author:     "Wwt"
 header-img: "img/seq2seq/bg.png"
 catalog: true
 tags:   
+    - NLP
     - seq2seq
-    - 标题生成
 
 ---
 

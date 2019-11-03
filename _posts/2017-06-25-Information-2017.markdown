@@ -7,7 +7,7 @@ author:     "Wwt"
 header-img: "img/information/bg.png"
 catalog: true
 tags:   
-    - 信息熵
+    - 信息论
     - NLP
 ---
 ### 信息熵

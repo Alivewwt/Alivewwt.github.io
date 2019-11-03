@@ -7,7 +7,7 @@ author:     "Wwt"
 header-img: "img/LSTM/bg.png"
 catalog: true
 tags:   
-    - LSTM
+    - 循环神经网络
     - 深度学习
 ---
 

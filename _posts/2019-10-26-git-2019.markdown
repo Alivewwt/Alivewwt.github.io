@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/git/bg.png"
 catalog: true
 tags:   
-    - git
     - 基础教程
 ---
 

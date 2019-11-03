@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/JMEE/bg.png"
 catalog: true
 tags:   
-    - 图卷积
     - 事件抽取
 	- NLP
 

@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/HANN/bg.png"
 catalog: true
 tags:   
-    - 注意力
     - NLP
     - 事件抽取
 

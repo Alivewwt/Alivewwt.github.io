@@ -8,7 +8,7 @@ header-img: "img/adversarial/bg.png"
 catalog: true
 tags:   
     - 事件抽取
-    - 对抗训练
+    - 对抗网络
     - NLP
 ---
 
