@@ -11,6 +11,7 @@ tags:
 	- 基础教程
 ---
 
+
 在XML解析方面，Python贯彻了自己‘开箱即用’(batteries include)的原则。在自带的标准库中，Python提供了大量可以用于处理XML语言的包和工具，数量之多，甚至让Python编程新手无从选择。
 
 本文介绍深入解读利用Python语言解析XML文件的几种方式，并以minidom示例，演示具体使用方法和场景。文中使用的Python版本为3.5.2。
