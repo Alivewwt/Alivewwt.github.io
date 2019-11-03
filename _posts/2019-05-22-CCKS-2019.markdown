@@ -4,7 +4,7 @@ title:      "金融事件评测任务"
 subtitle:   "事件抽取"
 date:       2019-05-22 10:00:00
 author:     "Wwt"
-header-img: "img/CCKS/bg.png"
+header-img: "img/ccks/bg.png"
 catalog: true
 tags:   
     - 事件抽取

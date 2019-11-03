@@ -9,7 +9,6 @@ catalog: true
 tags:   
     - 语言模型
     - NLP
-
 ---
 
 > 本文摘自文章《[Word2Vec Tutorial - The Skip-Gram Model](http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/)》，部分内容稍作修改，供学习参考
