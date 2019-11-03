@@ -7,8 +7,8 @@ author:     "Wwt"
 header-img: "img/BERT/bg.png"
 catalog: true
 tags:   
-    - BERT
     - 语言模型
+	- 深度学习
 
 ---
 >本文摘自夕小瑶专栏文章《[NLP的游戏规则从此改写？从word2vec,ELMo和BERT](https://zhuanlan.zhihu.com/p/47488095)》，部分内容稍作修改。

@@ -8,7 +8,6 @@ header-img: "img/perceptron/bg.jpg"
 catalog: true
 tags:   
     - 深度学习
-    - 感知器
 ---
 ### 1.深度学习
 

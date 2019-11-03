@@ -9,7 +9,7 @@ catalog: true
 tags:   
     - 文本分类
     - tensorflow
-    - CNN
+    - 基础教程
 ---
 在很早的一篇博文中[在Keras模型中使用预训练的词向量](https://wuwt.me/2017/08/21/pre-trained-embedding-keras/)，我们介绍了如何使用Keras实现一个卷积神经网络的文本分类模型。基于CNN的文本分类模型简直是新手学习一个深度学习框架的绝佳练手项目，所以，这篇博文我们将介绍一个基于tensorflow的卷积神经网络的文本分类模型，记录一下自己在学习tensorflow时候的爬坑过程。
 

@@ -7,7 +7,7 @@ author:     "Wwt"
 header-img: "img/probability/bg.png"
 catalog: true
 tags:   
-    - 概率
+    - 机器学习
     - 信息论
 ---
 

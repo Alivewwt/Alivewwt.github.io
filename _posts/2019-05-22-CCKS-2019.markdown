@@ -7,8 +7,8 @@ author:     "Wwt"
 header-img: "img/ccks/bg.png"
 catalog: true
 tags:   
-    - 半指针标注结构
-    - 金融事件评测
+    - NLP
+	- 事件抽取
 
 ---
 ### 任务描述

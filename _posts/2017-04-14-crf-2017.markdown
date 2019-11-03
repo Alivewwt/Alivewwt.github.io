@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/crf/bg.jpg"
 catalog: true
 tags:
-    - CRF
     - 维特比算法
     - 机器学习
 ---

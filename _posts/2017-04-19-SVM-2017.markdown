@@ -8,7 +8,6 @@ header-img: "img/SVM/bg.jpg"
 catalog: true
 tags:   
     - 机器学习
-    - SVM
 ---
 #### 1.什么是支持向量SVM 
 
@@ -141,7 +140,7 @@ $$f(x)=w^TΦ(x)+b,\quad (式15)$$
 
 其对偶问题
 
-$$\mathop{max}\limits_\alpha \sum^m_{i=1}\alpha_i-\frac{1}{2}\sum^m_{i=1}\sum^m_{j=1}\alpha_i\alpha_jy_iy_jΦ(x_i)^TΦ(x_j)	\quad式(17)​$$
+$$\mathop{max}\limits_\alpha \sum^m_{i=1}\alpha_i-\frac{1}{2}\sum^m_{i=1}\sum^m_{j=1}\alpha_i\alpha_jy_iy_jΦ(x_i)^TΦ(x_j)	\quad式(17)$$
 
 $$s.t \sum^m_{i=1}α_iy_i=0,\quad α_i\geq0,i=1,2···,m$$
 

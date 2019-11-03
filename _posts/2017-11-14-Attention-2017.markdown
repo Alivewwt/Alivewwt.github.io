@@ -7,8 +7,8 @@ author:     "Wwt"
 header-img: "img/attention/bg.png"
 catalog: true
 tags:   
-    - Attention
-    - 编码-解码
+    - 注意力
+    - 深度学习
 ---
 
 ### Encoder-Decoder

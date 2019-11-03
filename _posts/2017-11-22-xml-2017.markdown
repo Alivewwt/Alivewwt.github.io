@@ -8,6 +8,7 @@ header-img: "img/xml/bg.png"
 catalog: true
 tags:   
     - python
+	- 编程语言
 ---
 
 在XML解析方面，Python贯彻了自己‘开箱即用’(batteries include)的原则。在自带的标准库中，Python提供了大量可以用于处理XML语言的包和工具，数量之多，甚至让Python编程新手无从选择。
@@ -132,7 +133,7 @@ for node in post_node:
 
 - n=c.getElementsByTagName('SPEAKER')将获得所有&lt;SPEAKER &gt;&lt;/SPEAKER &gt;标签，所以直接[0]返回这个单独的对象。
 
-  ​
+  
 
 
 解析结果如下

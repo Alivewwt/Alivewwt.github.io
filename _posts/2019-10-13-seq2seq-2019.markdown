@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/tensorflow-seq2seq/bg.png"
 catalog: true
 tags:   
-    - seq2seq
     - NLP
 ---
 

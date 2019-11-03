@@ -7,7 +7,6 @@ author:     "Wwt"
 header-img: "img/text_similarity/bg.png"
 catalog: true
 tags:   
-    - text match
     - NLP
 ---
 CCL“中国法研杯”相似案例匹配评测竞赛主要是针对多篇法律文本进行相似度的计算和判断。具体地，对于每份文书提供文本的标题以及描述事实，需要从两篇候选文集中找到与询问文书更为相似的一篇文书。
