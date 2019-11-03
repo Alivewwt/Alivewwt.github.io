@@ -8,7 +8,7 @@ header-img: "img/skip-gram/bg.png"
 catalog: true
 tags:   
     - Word2Vec
-    - Skip-Gram
+    - NLP
 
 ---
 

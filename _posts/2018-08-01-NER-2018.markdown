@@ -6,9 +6,9 @@ date:       2018-08-01 10:00:00
 author:     "Wwt"
 header-img: "img/jointNER/bg.png"
 catalog: true
-tags:   
-    - 联合学习
+tags:  
     - 命名实体识别
+	- NLP
 ---
 
 >本文摘自博客《[基于神经网络的实体识别和关系抽取联合学习](https://www.cnblogs.com/robert-dlut/p/7710735.html)》，部分内容略微修改

@@ -8,7 +8,7 @@ header-img: "img/tensorflow-seq2seq/bg.png"
 catalog: true
 tags:   
     - seq2seq
-    - tensorflow
+    - NLP
 ---
 
 >转载自[玩转Keras之seq2seq自动生成标题 ](https://kexue.fm/archives/5861),作者：苏剑林
