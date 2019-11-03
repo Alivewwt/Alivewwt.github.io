@@ -9,8 +9,8 @@ catalog: true
 tags:   
     - NLP
     - 事件抽取
-
 ---
+
 文本分类是一项基础的NLP任务，在主题分类、情感分析、垃圾邮件检测等应用上有广泛的应用。目标是给每篇文档分配一个类别标签。本文针对文本分类任务提出了一个层次化attention机制模型Hierarchical Attention Networks for Document Classification(HAN)，有两个显著的特点：
 
 - 采用“词-句子-文章”的层次化结构来表示一篇文本。

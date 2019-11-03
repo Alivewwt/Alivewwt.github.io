@@ -9,7 +9,6 @@ catalog: true
 tags:   
     - 对抗网络
     - 深度学习
-
 ---
 >本文摘自文章《[到底什么是生成式对抗网络GAN？](https://www.msra.cn/zh-cn/news/features/gan-20170511)》，部分内容稍作修改。
 
