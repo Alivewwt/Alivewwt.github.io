@@ -109,6 +109,8 @@ $$
 $$
 J(\theta)= max\sum^{N_{ts}}_{j=1}\sum^{N_w}_{t=1}(logp(O_t^{y_t} \mid s_j,\theta)·I(O)+\alpha logp(O_t^{y_t} \mid s_j,\theta)·（1-I(O)))
 $$
+
+
 其中，$N_{ts}$是训练句子的数量，$N_w$是句子$s_j$的长度，$p(O_t^{y_t} \mid s_j,\theta)$是规范标签的概率，$y_t$是标注标签，$\alpha$是偏置权重，加大$\alpha$将会给模型的触发词标签带来更大的影响。另外，$I(O)$是模型的开关函数来区分触发词和非触发词标签的损失，定义如下：
 
 
