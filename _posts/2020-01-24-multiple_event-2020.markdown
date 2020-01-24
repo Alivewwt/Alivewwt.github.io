@@ -4,7 +4,7 @@ title:      "基于门控多层次注意力机制的偏置标注网络"
 subtitle:   "门控注意力"
 date:       2020-01-24 10:00:00
 author:     "Wwt"
-header-img: "/img/multiEvent/bg.png"
+header-img: "img/multiEvent/bg.png"
 catalog: true
 tags:   
     - NLP
@@ -45,45 +45,73 @@ tags:
 ##### 句子级别注意力
 
 本文使用句子级别注意力旨在捕捉句子级的线索。对于句子中的每个候选词$w_t$，它的句子级语义信息$sh_t$通过以下计算得到：
+
+
 $$
 sh_t=\sum_{k=1}^
 {N_w}\alpha^k_sh_k
 $$
+
+
 其中，$\alpha_s^k$是每个词$h_k$的权重。本文通过以下来获得 $\alpha_s^k$：
+
+
 $$
 \alpha^k_s=\frac{exp(z_s^k)}{\sum^{N_w}_{j=1}exp(z_s^j)}
 $$
+
+
 其中$z_s^k$表示第$t$个词$h_t$和第$k$个词$h_k$间的相关性，通过线性attention进行编码：
+
+
 $$
 z_s^k=tanh(h_tW_S{sa} h^T_k+b_{sa})
 $$
+
+
 其中，$W_{sa}$是权重矩阵，$b_{sa}$是偏置值。通过上述内容，本文可以得到每个词$w_t$的语义信息。
 
 ##### 文档级别注意力
 
 类似句子级的注意力，文档级注意力机制能捕捉到重要的文档级线索。文档级语义信息$dh_i$表示第$i$个句子：
+
+
 $$
 dh_i=\sum^{N_s}_{k=1}\alpha_d^kh_{sk}\\
 \alpha^k_d=\frac{z_d^k}{\sum^{N_s}_{j=1}exp(z_d^j)}\\
 z_d^k=tanh(h_{si}W_{da}h_{sk}^T+b_{da})
 $$
+
+
 其中，$\alpha_d^k$是每个句子$h_{sk}$的权重，$z_d^k$是第$i$个句子$h_{si}$和第$k$个句子$h_{sk}$的相关性。$W_{da}$是权重矩阵，$b_{da}$是偏置值。与句子级信息相比，第$i$个句子有一样的文档信息$dh_i$。
 
 另外，本文还设计了门控来动态整合第$i$个句子$s_i$中第$t$个词$w_t$中的句子级信息$sh_t$和文档级信息$dh_i$,得到它的上下文表示$cr_t$：
+
+
 $$
 cr_t = G_T \odot sh_t +((1-G_t)\odot dh_i)
 $$
+
+
 其中，$G_t$是融合门旨在编码句子线索$sh_t$和文档线索$dh_i$：
+
+
 $$
 G=\sigma(W_g[sh_t,dh_i]+b_g)
 $$
+
+
 最后，每个词$w_t$的上下文信息$cr_t$和词向量$e_t$拼接成一个向量$cr_t=[e_t,cr_t]$，作为新特征表示。
 
 在对触发词标签进行解码时，本文提出两层标注LSTM层和一个标注attention来自动捕获事件间的隐含关系。特别地，本文还设计了一个偏置目标函数$J(\theta)$来加强触发词标签的影响，定义如下：
+
+
 $$
 J(\theta)= max\sum^{N_{ts}}_{j=1}\sum^{N_w}_{t=1}(logp(O_t^{y_t} \mid s_j,\theta)·I(O)+\alpha logp(O_t^{y_t} \mid s_j,\theta)·（1-I(O)))
 $$
 其中，$N_{ts}$是训练句子的数量，$N_w$是句子$s_j$的长度，$p(O_t^{y_t} \mid s_j,\theta)$是规范标签的概率，$y_t$是标注标签，$\alpha$是偏置权重，加大$\alpha$将会给模型的触发词标签带来更大的影响。另外，$I(O)$是模型的开关函数来区分触发词和非触发词标签的损失，定义如下：
+
+
 $$
 I(O)=\begin{Bmatrix}
 				1 ,if \quad tag ='O'\\
