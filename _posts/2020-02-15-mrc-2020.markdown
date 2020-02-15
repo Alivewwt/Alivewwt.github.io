@@ -1,0 +1,93 @@
+---
+layout:     post
+title:      "BERT应用之阅读理解"
+subtitle:   "BERT"
+date:       2020-02-15 10:00:00
+author:     "Wwt"
+header-img: "img/mrc/bg.png"
+catalog: true
+tags:   
+    - NLP
+---
+
+>本文参考自[BERT系列（三）-- BERT在阅读理解与问答上应用](https://cloud.tencent.com/developer/article/1465005)，部分内容有删改。
+
+机器阅读理解和问答是自然语言处理领域的一个热门主题。该任务旨在让机器人像人类一样能够看懂文章。因此本篇将通过介绍如何利用BERT来解决阅读理解与问答问题，来帮助新手入门阅读理解任务。
+
+### 阅读理解与问答简介
+
+机器阅读理解与问答主要涉及到深度学习、自然语言处理和信息检索。检索阅读理解具有很高的研究价值和丰富的落地场景。它能够让计算机辅助人类在海量文本中快速找到准确答案，从而降低人们对信息的获取成本。
+具体来讲，机器阅读理解和问答任务(QA)指的是给定一个问题和一个或多个文本，训练QA模型可以根据文本找出答案。一般情况下，有以下三种问题：simple question ，即简单的问题，可以用简单的事实回答，答案通常是一个named entity；complex (narrative)questions，即稍微复杂的叙述问题，答案略长； complex (opinion) questions，即复杂的问题，通常是关于观点/意见。对于第一类问题，标准答案一般与文本中的答案完全匹配。本文涉及的问答任务问题均为第一类问题。
+
+传统解决阅读理解与问答任务的方法一般基于特征的逻辑回归(通常作为baseline)。随着深度学习的流行，越来越多的深度学习模型在此类问题上得到SOTA结果。陈丹琦提出大规模开源数据库的DrQA模型，百度提出的Nerual recurrent sequence labeling model等。但Google提出BERT模型之后，只需要进行简单的fine-tuning，便可在英文数据集SQuAd获得SOTA结果，并且超越了人类的表现。同样地，当我们对模型进行修改就适用于中文，我们发现BERT在中文的阅读理解与问答任务上表现十分出色，远高于其它模型。接下来我们将介绍BERT在阅读理解模型上的处理步骤和应用。
+
+### BERT的Fine-tuning原理
+
+这里我们介绍如何通过设计fine-tuning来处理阅读理解与问答。如下图所示，模型的输入序列为句子对所对应的embeddings。句子对**由问题和包含答案的文本组成**，并有特殊分隔符"[SEP]"分隔。同其他下游任务一样，输入序列的第一个token为特殊分类嵌入"[CLS]"，同时输入序列为token embeddings，segmentation embeddings，以及position embedding之和。
+
+![1](/img/mrc/1.png)
+
+BERT的输出为每个token所对应的encoding vector。假设 vector的维度为$D$，那么整个输出序列$T^{N\times D}$，其中$N$为整个序列的长度。因为答案由文本中连续的token组成，所以预测答案的过程本质上是确定答案开头和结尾token所在的位置。因此，经过全连接层之后，得到$O^{N \times D}$。其中$FC$代表了全连接层，$O^{N \times 2}$为每一个taoken分别作为答案开头和结尾的logit值，再经过Softmax层之后就得到相应的概率值。经过数据处理之后，便可以得到预测答案。
+
+### 工作流程
+
+#### 数据集
+
+我们使用百度在2016年开源的中文问答数据集WebQA为该任务的数据集，该数据集由一系列的(问题，证据，答案)组成。所有的数据均来源于网络，并主要来源于问答社区"百度知道"。换句话说，该数据集中所有数据均来自于真实世界而非虚构。数据集有两大特点：(1)所有的问题均为事实类问答(factoid question)，(2)问题的答案由一个实体构成。该数据集类似于Stanford开源的英文问答数据集SQuAD。
+
+![2](/img/mrc/2.png)
+
+#### 数据预处理
+
+首先对问题和证据进行tokenization处理，即将sentence转为character level 的序列。之后将问题序列 和事实证据片段相连接并以"[SEP]"分隔。在序列的开头增加"[CLS]"，并在连接的序列后做padding处理。padding后的序列总长度是一个超参数。此外还需提供序列对应的segmentation id 和 input mask 信息，其中 segmentation id 表征了token 所在句子的信息，而input mask 表征了token是否为padding值。经过预处理后，输入序列为:
+
+![3](/img/mrc/3.png)
+
+值得注意的是，对于问题+事实片段的长度大于BERT规定的最大长度的情况，将事实以一定的步长分割为若干段，分别和问题连接。为了保证分割后的事实尽可能不消减事实的语义。事实和事实片段之间有一定长度的重叠部分，该部分的长度为模型的超参数。
+
+#### 模型训练
+
+##### 参数介绍
+
+- bert_dir:预训练模型的存放路径，其中包括的重要参数有：
+  - Vocal.txt:提供的此表用于输入数据的token embedding查找
+  - bert_config:提供预训练模型的配置信息
+  - Init_checkpoint:预训练模型的checkpoint
+
+- max_seq_length:最大序列长度，长度小于该长度，将进行padding处理，大于该长度，序列将进行分段
+- Doc_stride:文档华滑动窗口，当需要对序列进行分段时，相邻分段序列的重叠长度
+- Max_query_length:最大问题长度，序列长度大于该长度时，问题将被截断
+
+##### 训练细节
+
+在训练过程中objective function则定义如下：
+$$
+L_{\theta}(T) -sum_{i}log(p_{\theta}(\tilde{y_i}\mid x_i^e))
+$$
+其中$\tilde y_i$位标准答案开头结尾所在位置，$T = {(\tilde y_i, x^e_i)}$表示训练集，我们通过BERT+全连接层来建模$p_\theta(y|x)$。
+
+##### 模型预测及后处理
+
+同训练数据一样，待预测的问题+文本输入到模型后得到的输出为每个token为答案开头或答案结尾的logits值，对数据进行后处理得到预测的答案，其本质为确定答案片段在文本中开头和结尾的位置。后处理的过程相对冗余，在此不展开讨论，其主要逻辑是选择合理位置(start position 和 end position要在文本所在范围，且前者位置要在后者之前等)，以及开头和结尾的logits之和尽可能大的结果。
+
+此外模型支持 "no answer"的预测，即判断证据中不存在问题答案。如果最优预测结果的start和end 都指向序列的开头，即"[CLS]"，则可判断为"no answer"。但为了调节模型预测"no answer"的能力，我们提供一个参数"no_score_diff_threshold"，只有"no_answer"对应的score(logits之和)与最优的非"no answer"对应score的差值大于该threshold，模型才判断为"no_answer"。该值可以由训练人员自行调节。
+
+- Version_2_with_negative:如果为"True"，模型将考虑"no answer"的情况
+- null_score_diff_threshold：只有"no answer"的score与非"no answer"的score大于该值，判断答案为"no answer"，该值可以为负。
+
+### 总结
+
+Google在开源BERT模型时已经在英文问答数据集SQuAD获得SOTA值，经过实验，BERT在处理中文问答任务时同样有十分出色的表现。这证明了BERT作为一种强大的预训练模型，确实可以很好地表征token 的词义特征、语义特征和句法特征。
+
+BERT与其它预训练模型ELMO,GPT等出色的表现轰动了自然语言处理领域，现如今有很多学者和机构基于Transformer及BERT提出更强大的模型，例如百度及清华分别提出的ERINE模型，这两个同名模型均将知识图谱信息融入BERT，使得BERT在大规模先验知识的加成下表现更上一层楼。此外，我们可以断言，Pre-trained Model+ Fine Tuning的模型在今后会是自然语言处理领域的主流。
+
+### 参考
+
+[BERT系列（三）-- BERT在阅读理解与问答上应用](https://cloud.tencent.com/developer/article/1465005)
+
+
+
+
+
+
+
