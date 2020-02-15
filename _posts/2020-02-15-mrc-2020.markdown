@@ -61,9 +61,13 @@ BERT的输出为每个token所对应的encoding vector。假设 vector的维度�
 ##### 训练细节
 
 在训练过程中objective function则定义如下：
+
+
 $$
 L_{\theta}(T) -\sum_{i}log(p_{\theta}(\tilde{y_i}\mid x_i^e))
 $$
+
+
 其中$\tilde y_i$位标准答案开头结尾所在位置，$T = {(\tilde y_i, x^e_i)}$表示训练集，我们通过BERT+全连接层来建模$p_\theta(y|x)$。
 
 ##### 模型预测及后处理
