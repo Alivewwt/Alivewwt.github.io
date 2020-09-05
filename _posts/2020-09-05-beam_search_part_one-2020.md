@@ -77,7 +77,7 @@ self.model.decoder.map_state(_repeat_beam_size_times)
 | h21  | h22  | h23  | h24  |
 | h31  | h32  | h33  | h34  |
 
-​														图1.编码器的最后3*4隐藏向量
+​															图1.编码器的最后3*4隐藏向量
 
 变成一个$ (3 \times 4) \times 4$的向量
 
@@ -95,7 +95,7 @@ self.model.decoder.map_state(_repeat_beam_size_times)
 |   h21   |   h22   |   h23   |   h24   |
 |   h31   |   h32   |   h33   |   h34   |
 
-​															图2.扩展后的隐藏向量
+​														图2.扩展后的隐藏向量
 
 它将解码器设置为一次运行$3\times4$序列(即使用批处理大小12)，因此我们可以同时对这三个输入序列进行束搜索。
 
@@ -112,9 +112,9 @@ self.model.decoder.map_state(_repeat_beam_size_times)
 |  B1  |  B2  |  B3  |  B4  |
 |  C1  |  C2  |  C3  |  C4  |
 
-​													图3.解码器的上一次预测结果
+​														图3.解码器的上一次预测结果
 
-操作.t()将张量翻转为一个$4*3$的张量：
+操作.t()将张量翻转为一个$4\times3$的张量：
 
 |  A1  |  B1  |  C1  |
 | :--: | :--: | :--: |
@@ -122,7 +122,7 @@ self.model.decoder.map_state(_repeat_beam_size_times)
 |  A3  |  B3  |  C3  |
 |  A4  |  B4  |  C4  |
 
-​													图4. 结果转置
+​																图4. 结果转置
 
 .view(1,-1)将向量拉平到$1\times12$
 
@@ -130,7 +130,7 @@ self.model.decoder.map_state(_repeat_beam_size_times)
 | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | A1   | A2   | A3   | A4   | B1   | B2   | B3   | B4   | C1   | C2   | C3   | C4   |
 
-​													图5.结果flatten
+​																图5.结果flatten
 
 对于隐藏状态，序列以与图2中相同的模式重复。
 
@@ -141,7 +141,7 @@ dec_out, attn = self.model.decoder(inp, memory_bank,
     memory_lengths=memory_lengths,  step=i)                                                              
 ```
 
-解码器输出被送到生成器中，以获取最终（对数）概率输出（self.model.generator.forward）。 然后将概率转换为$4x3x（num_words）$张量
+解码器输出被送到生成器中，以获取最终（对数）概率输出（self.model.generator.forward）。 然后将概率转换为$4\times3\times（num_words）$张量
 对于每个输入序列，相应的（对数）概率输出将传递到其Beam对象（b.advance）：
 
 ```python
