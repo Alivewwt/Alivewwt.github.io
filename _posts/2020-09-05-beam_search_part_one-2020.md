@@ -208,7 +208,7 @@ for i in range(self.next_ys[-1].size(0)):
         self.finished.append((s, len(self.next_ys) - 1, i))
 ```
 
-最后，它检查停止条件（如果EOS令牌位于最可能的序列的末尾）并设置`eos_top`标志：
+最后，它检查停止条件（如果EOS结束符号最可能位于序列的末尾）并设置`eos_top`标志：
 
 ```python
 # End condition is when top-of-beam is EOS and no global score.                               if self.next_ys[-1][0] == self._eos:                                     
