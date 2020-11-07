@@ -153,7 +153,11 @@ $$
 x_{t+1}=\Pi_{x+S}(x_t+\alpha g(x_t)/\mid\mid g(x_t)\mid\mid_2)\\
 g(x_t) = \nabla_xL(\theta,x_t,y)\
 $$
-其中$S=r \in \R^d: \mid\mid r \mid\mid_2 \leq \epsilon$为扰动的约束空间，$\alpha$为小步的步长。
+其中
+$$
+S=r \in \R^d: \mid\mid r \mid\mid_2 \leq \epsilon
+$$
+为扰动的约束空间，$\alpha$为小步的步长。
 
 ```python
 import torch
@@ -228,10 +232,3 @@ for batch_input, batch_label in data:
 ### 总结
 
 上面简单地介绍了NLP中对抗训练概念以及常用的两种对抗训练方式，在一些NLP任务取得了一些性能的提升。不过，根据我们使用的经验来看，是否有效有时也取决于数据集。毕竟炼丹，真的很奇妙。
-
-
-
-
-
-
-
