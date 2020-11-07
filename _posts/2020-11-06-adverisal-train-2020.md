@@ -147,15 +147,11 @@ for batch_input, batch_label in data:
 #### **b. Projected Gradient Descent（PGD）**
 
 内部max的过程，本质上是一个非凹的约束优化问题，FGM解决的思路其实就是梯度上升，**那么FGM简单粗暴的“一步到位”，是不是有可能并不能走到约束内的最优点呢？**当然是有可能的。于是，一个很intuitive的改进诞生了：Madry在18年的ICLR中，提出了用Projected Gradient Descent（PGD）的方法，简单的说，就是**“小步走，多走几步”**，如果走出了扰动半径为$\epsilon$的空间，就映射回“球面”上，以保证扰动不要过大：
-
-
 $$
 x_{t+1}=\Pi_{x+S}(x_t+\alpha g(x_t)/\mid\mid g(x_t)\mid\mid_2)\\
 g(x_t) = \nabla_xL(\theta,x_t,y)
 $$
 其中
-
-
 $$
 S=r\in \R ^d: \mid\mid r \mid\mid_2 \leq \epsilon
 $$
