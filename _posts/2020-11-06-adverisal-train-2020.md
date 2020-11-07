@@ -153,9 +153,11 @@ $$
 x_{t+1}=\Pi_{x+S}(x_t+\alpha g(x_t)/\mid\mid g(x_t)\mid\mid_2)\\
 g(x_t) = \nabla_xL(\theta,x_t,y)\
 $$
+
+
 其中
 $$
-S=r \in \R^d: \mid\mid r \mid\mid_2 \leq \epsilon
+S=r\in \R ^d: \mid\mid r \mid\mid_2 \leq \epsilon
 $$
 为扰动的约束空间，$\alpha$为小步的步长。
 
