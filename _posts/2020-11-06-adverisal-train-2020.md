@@ -151,11 +151,11 @@ for batch_input, batch_label in data:
 
 $$
 x_{t+1}=\Pi_{x+S}(x_t+\alpha g(x_t)/\mid\mid g(x_t)\mid\mid_2)\\
-g(x_t) = \nabla_xL(\theta,x_t,y)\
+g(x_t) = \nabla_xL(\theta,x_t,y)
 $$
-
-
 其中
+
+
 $$
 S=r\in \R ^d: \mid\mid r \mid\mid_2 \leq \epsilon
 $$
