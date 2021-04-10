@@ -102,7 +102,7 @@ self.model.decoder.map_state(_repeat_beam_size_times)
 然后，它进入一个循环，该循环最多运行`self.max_length`次。在每次迭代的开始，检查停止条件后，它会通过收集最后一个时间步长的预测值来创建解码器输入（第一步输入是句子的开始符/BOS）。
 
 ```python
-# Construct batch x beam_size nxt words.Get all the pending current beam words and arrange for forward.
+# Construct batch x beam_size next words.Get all the pending current beam words and arrange for forward.
 inp = var(torch.stack([b.get_current_state() for b in beam]).t().contiguous().view(1, -1))
 ```
 
