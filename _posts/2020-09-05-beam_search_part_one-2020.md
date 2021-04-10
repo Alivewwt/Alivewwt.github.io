@@ -61,7 +61,7 @@ translator = build_translator(opt, report_score=True)                           
 _translate_batch方法将输入序列送到编码器，然后得到最后隐藏状态和每一步的输出：
 
 ```python
-src, enc_states, memory_bank, src_lengths = self._run_encoder(                    batch, data_type)
+src, enc_states, memory_bank, src_lengths = self._run_encoder(                batch, data_type)
 ```
 
 假定模型对每个样本/输入都有四个编码器隐藏状态，并且我们要进行大小为4的束搜索，以下代码
@@ -189,15 +189,16 @@ for i in range(self.next_ys[-1].size(0)):
 
 ```python
 flat_beam_scores = beam_scores.view(-1) \
-best_scores, best_scores_id = flat_beam_scores.topk(self.size, 0,                                                                                   
-    True, True)
+best_scores, best_scores_id = flat_beam_scores.topk(self.size,True,True)                                                                      
 ```
 
 该方法需要从`best_score_id`中恢复节点索引和令牌索引，以便分别更新`prev_ks`和`next_ys`：
 
 ```python
-# best_scores_id is flattened beam x word array, so calculate which wo rd and beam each sacore came form
-prev_k = best_scores_id / num_words                               self.prev_ks.append(prev_k)                               self.next_ys.append((best_scores_id - prev_k * num_words))
+#best_scores_id is flattened beam x word array, so calculate which wo rd and beam each sacore came form
+prev_k = best_scores_id / num_words
+self.prev_ks.append(prev_k) 
+self.next_ys.append((best_scores_id - prev_k * num_words))
 ```
 
 现在，该方法检查这些新节点，以查看它们中的任何一个是否为EOS令牌（完成输出序列）。 如果是这样，则将序列添加到列表`self.finished`作为输出候选：
