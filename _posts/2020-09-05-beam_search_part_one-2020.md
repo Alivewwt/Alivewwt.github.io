@@ -188,14 +188,16 @@ for i in range(self.next_ys[-1].size(0)):
 得分/概率张量被展平，并且`topk`方法用于选取最可能的（beam_size）序列。 它们是要添加到搜索树中的新节点：
 
 ```python
-flat_beam_scores = beam_scores.view(-1)                               best_scores, best_scores_id = flat_beam_scores.topk(self.size, 0,                                                                                   
+flat_beam_scores = beam_scores.view(-1) \
+best_scores, best_scores_id = flat_beam_scores.topk(self.size, 0,                                                                                   
     True, True)
 ```
 
 该方法需要从`best_score_id`中恢复节点索引和令牌索引，以便分别更新`prev_ks`和`next_ys`：
 
 ```python
-# best_scores_id is flattened beam x word array, so calculate which                               # word and beam each score came from                               prev_k = best_scores_id / num_words                               self.prev_ks.append(prev_k)                               self.next_ys.append((best_scores_id - prev_k * num_words))
+# best_scores_id is flattened beam x word array, so calculate which wo rd and beam each sacore came form
+prev_k = best_scores_id / num_words                               self.prev_ks.append(prev_k)                               self.next_ys.append((best_scores_id - prev_k * num_words))
 ```
 
 现在，该方法检查这些新节点，以查看它们中的任何一个是否为EOS令牌（完成输出序列）。 如果是这样，则将序列添加到列表`self.finished`作为输出候选：
@@ -211,7 +213,8 @@ for i in range(self.next_ys[-1].size(0)):
 最后，它检查停止条件（如果EOS结束符号最可能位于序列的末尾）并设置`eos_top`标志：
 
 ```python
-# End condition is when top-of-beam is EOS and no global score.                               if self.next_ys[-1][0] == self._eos:                                     
+# End condition is when top-of-beam is EOS and no global score.
+if self.next_ys[-1][0] == self._eos:                                     
     self.all_scores.append(self.scores)                                   
     self.eos_top = True
 ```
