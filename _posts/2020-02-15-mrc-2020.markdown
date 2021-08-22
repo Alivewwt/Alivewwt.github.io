@@ -88,10 +88,3 @@ BERT与其它预训练模型ELMO,GPT等出色的表现轰动了自然语言处�
 ### 参考
 
 [BERT系列（三）-- BERT在阅读理解与问答上应用](https://cloud.tencent.com/developer/article/1465005)
-
-
-
-
-
-
-
