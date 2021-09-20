@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "理解NLP SubWord算法"
-subtitle:   "Byte Pair Encode"
+subtitle:   "Byte Pair Encoding"
 date:       2021-09-20 10:00:00
 author:     "Wwt"
 header-img: "img/subword/bg.png"
