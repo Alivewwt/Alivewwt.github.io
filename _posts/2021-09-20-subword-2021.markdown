@@ -53,19 +53,19 @@ BPE(字节对)编码或二元编码是一种简单的数据压缩形式，其中
 
 输入：
 
->{\textcolor{red}{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w e s t </w>': 6, 'w i d e s t </w>': 3}}
+>{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w e s t </w>': 6, 'w i d e s t </w>': 3}
 
 第一次迭代，最高频连续字节对"e"和"s"出现了6+3=9次，合并成"es"。输出：
 
->{\textcolor{red}{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w es t </w>': 6, 'w i d es t </w>': 3}}
+>{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w es t </w>': 6, 'w i d es t </w>': 3}
 
 第二次迭代，最高频连续字节对'es'和“t”出现了6+3=9次，合并成“est"。输出“
 
->{\textcolor{red}{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w est </w>': 6, 'w i d est </w>': 3}}
+>{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w est </w>': 6, 'w i d est </w>': 3}
 
 第三次迭代，以此类推，最高频连续字节对为"est"和“</w>”输出。
 
->{\color{red}{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w est </w>': 6, 'w i d est </w>': 3}}
+>{'l o w </w>': 5, 'l o w e r </w>': 2, 'n e w est </w>': 6, 'w i d est </w>': 3}
 
 ......
 
