@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "基于bert生成对抗样本"
+title:      "基于BERT生成对抗样本"
 subtitle:   "text classification"
 date:       2021-10-27 10:00:00
 author:     "Wwt"
@@ -54,7 +54,7 @@ BAE使用两种基于token级别的方式来生成对抗样本（1）替换token
 
 ### 结果
 
-![2](/image/bert-adversarial-example/2.png)
+![2](/img/bert-adversarial-example/2.png)
 
 上图是在4个情感分类任务上生成对抗样本的自动评价，括号里表示的是从统一语义编码获得对抗样本和原始样本之间的平均语义相似度，就最大的测试准确度下降而言，最佳性能用黑体表示。
 
@@ -62,13 +62,13 @@ BAE使用两种基于token级别的方式来生成对抗样本（1）替换token
 
 TextFooler攻击有时比BERT分类器使用BAE-R攻击还有效，分析原因在于BERT-MLM分类器和BERT在微调前共享参数空间。使用BERT-MLM 预测token无法彻底改变BERT分类器学习的内部表示，阻碍它们的对抗性能力影响分类器的预测。
 
-![3](/image/bert-adversarial-example/3.png)
+![3](/img/bert-adversarial-example/3.png)
 
 上图中是一个有效生成对抗性攻击的句子。所有的策略成功地改变了分类结果，但BAE攻击产生了比TextFooler更自然的示例。BERT-MLM预测的被遮蔽词更符合上下文，而TextFooler倾向于用复杂的同义词替换单词，这很容易被发现。此外，BAE插入token的额外自由度允许以更少的扰动达到成功的攻击目的。
 
 人工评价结果如下：
 
-![4](/image/bert-adversarial-example/4.png)
+![4](/img/bert-adversarial-example/4.png)
 
 我们从情感准确度和对抗样本的自然性两个角度评价，从图中可以看出，在两个指标上BAE-R和BAE-R+I攻击总是优于TextFooler，BAE-R优于BAE-R+I，这是由于后者插入token以加强攻击，牺牲的是文本自然性和情感的准确性。有趣的是，BAE-R+I比BAE-R获得了更高的平均语义相似度分数。原始数据和对抗样本之间的分数差距，说明了攻击的局限性，但BAE表明了朝着改进对抗样本迈出了重要的一步。
 
