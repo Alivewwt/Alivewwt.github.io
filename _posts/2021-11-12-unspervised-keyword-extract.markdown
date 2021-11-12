@@ -50,8 +50,8 @@ $$
 
 YAKE是一种关键字提取方法，它利用单个文档的统计特征来提取关键字，需经历五个步骤 ：
 
-1. 预处理和候选词识别---文本被分成句子、块和标记。文本被清理、标记和停用词也会被识别。
-2. 特征提取---算饭计算文档中单词的五个统计特征
+1. 预处理和候选词识别---文本被分成句子、块和标记。文本被清理标记，停用词也会被识别。
+2. 特征提取---计算文档中单词的五个统计特征
    1. 大小写---计算该术语在文本中出现大写或作为首字母缩略词的次数(与所有出现成比例)。重要的术语通常更频繁地出现大写。
    2. 词条位置---词条在文本中的中间位置。更接近开头的术语更重要。
    3. 词频归一化---测量文档中的平衡词频。
@@ -92,15 +92,15 @@ text = "Sources tell us that Google is acquiring Kaggle, a platform that hosts d
 
 kw_extractor = yake.KeywordExtractor()
 keywords = kw_extractor.extract_keywords('text')
-'''
-specify parameters
-language = "en"
-max_ngram_size = 3
-deduplication_thresold = 0.9
-deduplication_algo = 'seqm'
-windowSize = 1
-numOfKeywords = 20
-'''
+
+#specify parameters
+#language = "en"
+#max_ngram_size = 3
+#deduplication_thresold = 0.9
+#deduplication_algo = 'seqm'
+#windowSize = 1
+#numOfKeywords = 20
+
 for kw in keywords:
   print(kw)
  
@@ -168,10 +168,14 @@ output:
 位置权重增加的方法:
 
 
+
 $$
 p(NP_i)=\frac{1}{p_i+\mu}
 $$
+
+
 作者采用候选词第一次出现的位置倒数作为位置权重，$$\mu$$s是超参数，并且对位置权重归一化。
+
 
 
 $$
@@ -179,12 +183,15 @@ $$
 $$
 
 
+
 最终的权重如下=位置权重$\times$候选词与文章的相似度
+
 
 
 $$
 SIFRank+(NP_i,d)=\hat p(NP_i) \times Sim(v_{NP_i},v_d)
 $$
+
 
 
 SIFRank的结构如下：
