@@ -164,7 +164,7 @@ Open AI最近发布的GPT-3模型是人类历史上最大的NLP模型之一，�
 
 ZSL的详细解释超出了本博客的范围，但上述描述足以满足本博客的需要，好奇的读者可以阅读Hugging Face团队对ZSL的详细解释，可以在这里找到[ZSL](https://joeddav.github.io/blog/2020/05/29/ZSL.html)。
 
-#### **Part2-: Client-Side Script to Interact with Triton Inference Server for Zero-Shot-Text Classification**
+### **Part2-: Client-Side Script to Interact with Triton Inference Server for Zero-Shot-Text Classification**
 
 ```python
 import argparse
