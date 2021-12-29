@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      triton部署与transformers model应用
+title:      Triton Inference server部署transformers model
 subtitle:   "Triton Server"
 date:       2021-12-29 10:00:00
 author:     "Wwt"
@@ -40,7 +40,7 @@ tags:
 6. 提供GPU利用率、服务器吞吐量和服务器延迟的指标，指标以Prometheus数据格式提供
 7. 提供模型版本
 
-PART 1 -- Setting up our own TRITON Inference Server
+### PART 1 -- Setting up our own TRITON Inference Server
 
 我们现在对Triton推理服务器有了基本了解，我们首先按照以下步骤在本地设置Triton服务器。
 
@@ -80,7 +80,7 @@ PART 1 -- Setting up our own TRITON Inference Server
 
 > 提醒：借助以下步骤，我们几乎可以将任何hugging face pytorch模型转换为Triton可接受的模型。
 
-### Step 1: Load and Convert Hugging Face Model
+#### Step 1: Load and Convert Hugging Face Model
 
 模型的转换时是使用JIT来跟踪版本完成的。根据Pytorch的文档，"torchscript"是一种从Pytorch代码创建可序列化和可优化模型的方法，它允许开发人员导出他们的模型在其它程序中复用，例如在注重效率的C++程序。
 
@@ -122,7 +122,7 @@ torch.jit.save(traced_script_model,'model.pt')
 >|     |- model.pt
 >|
 
-### Step 2:  Write the Configuration File
+#### Step 2:  Write the Configuration File
 
 配置文件config.pbtxt包含允许的输入/输出类型和形状，批次大小，版本控制，平台的详细信息，因为服务器不知道这些配置的详细信息，因此，我们将它们写入单独的配置文件中。
 
@@ -152,7 +152,7 @@ HuggingFace的RoBerta模型的配置文件如下：
 
 >docker run --gpus=1 --rm -p8000:8000 -p8001:8001 -p8002:8002 -v/full/path/to/example/model/repository:/models <docker image> tritonserver --model-repository=/models
 
-### Zero-Shot-Learning for Text Classification
+#### Zero-Shot-Learning for Text Classification
 
 Open AI最近发布的GPT-3模型是人类历史上最大的NLP模型之一，拥有高达1750亿个参数。这个巨大模型在零样本、少样本和单样本设置下取得了可喜的结果。在某些情况下甚至超过了使用上述技术的最先进模型。这些都引起了我们
 
