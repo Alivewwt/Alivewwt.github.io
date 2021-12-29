@@ -1,0 +1,226 @@
+---
+layout:     post
+title:      triton部署与transformers model应用
+subtitle:   "Triton Server"
+date:       2021-12-29 10:00:00
+author:     "Wwt"
+header-img: "img/triton/bg.png"
+catalog: true
+tags:   
+    - NLP
+---
+
+
+
+>本篇博客来自于[How to deploy (almost) any Hugging face model 🤗 on NVIDIA’s Triton Inference Server with an application to Zero-Shot-Learning for Text Classification](https://medium.com/nvidia-ai/how-to-deploy-almost-any-hugging-face-model-on-nvidia-triton-inference-server-with-an-8ee7ec0e6fc4),有部分改动。
+
+### SUMMARY
+
+在这篇博客中，我们研究了Nvidia的triton推理服务器(以前称为TensorRT推理服务器)，它简化了AI模型在生产中的大规模部署。在这次实验过程中，我们主要关注部署基于Transformer框架语言模型，像BERT，GPT2，BART和RoBerta等等。然后，为了解决零样本文本分类，我们将使用hugging face的RoBerta(多语言推理模型)，部署在Triton服务器上。一旦部署，我们就可以请求推理并可以返回预测。对于，设置Triton推理服务器，我们通常需要通过两个障碍：1）设置我们自己的推理服务器，2）我们需要编写一个可以与服务器通信的python客户端脚本发送脚本并获取预测或文本特征。
+
+### PreQuirements
+
+1. 支持Nvidia CUDA 的GPU; 在这篇博文，我是用的是GeForce RTX 2080 Nvidia GPU，内存大小约为12Gb.
+2. Nvidia docker triton客户端，用于与Triton推理服务器通信
+3. hugging face 库
+
+### Basic Introduction
+
+最吸引我们所有人的一件事是Triton推理服务器能够托管/部署来自于本地存储或谷歌云平台的基于GPU或CPU的基础设施任何框架(无论是Tensorflow、TensorRT、Pytorch、Caffee、ONNX、Runtime的训练模型或一些自定义的框架）。在nvidia的triton框架中，模型检查点在服务之前被优化/压缩(在pytorch模型的情况下是量化和修剪)，这减少了GPU上的内存占用，并使其内存使用变得更加高效和健壮，以在GPU上服务多个模型。
+
+>趣事：tensorflow 是我们团队中最受欢迎的框架，但由于我们最近对文本处理比较感兴趣以及随着hugging face transformers 模型的流行，我们的注意力转移到深入地挖掘pytorch模型，特别是用于文本处理的模型。因此，我们需要一个通用平台，我们可以在其中托管基于不同框架的多个训练模型，并且不会对各种模型类型的吞吐量和延迟造成太大影响，因此，Nvidia Triton 推理服务器是以一个最佳选择。
+
+### Some more Feature of TriTon
+
+1. 并发模型执行支持:多个模型(或同一模型的多个实例)可以在同一个GPU上同时运行
+2. 批处理支持：Triton可以处理一批输入请求及其对应的一批预测结果
+3. 支持集成
+4. 多GPU支持：Triton可以在所有系统GPU上分布推理
+5. 模型存储库可以驻留在本地可访问的文件系统(例如NFS)、Google Cloud Storage 或Amazon s3中（如果我们想在云上部署Triton服务器并通过最流行的Lambda 函数在AWS的情况下发出推理请求，此功能将发挥非常重要的作用）
+6. 提供GPU利用率、服务器吞吐量和服务器延迟的指标，指标以Prometheus数据格式提供
+7. 提供模型版本
+
+PART 1 -- Setting up our own TRITON Inference Server
+
+我们现在对Triton推理服务器有了基本了解，我们首先按照以下步骤在本地设置Triton服务器。
+
+1. 使用NVIDIA GPU Cloud（NGC）提供的预建Docker容器，有关更多信息，请参考使用预建的Docker 容器。
+
+2. 如果您需要示例模型存储库，请克隆Triton推理服务器Github存储库（这里将存储我们所有经过训练的模型）。链接https://github.com/triton-inference-server/server ，然后选择克隆下载(这也将下载一些按照Triton预期方式构建的预训练模型)，克隆仓库后，请务必选择与您要使用的Triton版本相对应的r\<xx:yy\>发布分支：git checkout r20.06。
+
+   > 克隆后，你可以发现预训练模型在server->docs->examples->model_repository目录下
+
+3. 使用docker从NGC上下载Triton推理服务器容器
+
+   > docker pull nvcr.io/nvidia/tritonserver:<xx.yy>-py3
+
+   其中\<xx:yy\>是你要下载Triton 的版本号，为了保持与本篇博文一样的实验环境，请下载20.12-py3的版本，否则你可能会遇到与Triton客户端库相关的一些问题。安装后，你可以使用以下命令查看Triton服务器容器：
+
+   >Sudo docker images
+
+4. 以上步骤，我们就创建Triton服务器，这是所需的最少步骤。有关详细的安装步骤，你可以在此处查看官方文档:安装Triton，但我希望此博客能够为你提供小小的帮助。
+
+#### Instantiate Triton Inference Server
+
+>$ docker run --gpus=1 --rm -p8000:8000 -p8001:8001 -p8002:8002 -v/full/path/to/example/model/repository:/models <docker image> tritonserver --model-repository=/models
+
+如果您从NGC中提取了Triton容器，其中\<docker images\>是nvcr.io/nvidia/tritonserver:<xx.yy>-py3。-v 是将本地目录挂载到容器内的路径，所以模型都存储在其中。
+
+#### Verify Triton is running Correctly
+
+>curl -v localhost:8000/v2/health/ready
+
+预期输出应该是(默认情况下，triton在端口8000上提供服务)
+
+>HTTP/1.1 200 OK
+>< Content-Length: 0
+>< Content-Type: text/plain
+
+从现在起，我们已经使用模型存储库中已经存在的默认模型运行在Triton 服务器中。下一步是将hugging face的RoBerta模型添加到模型存储库中，使其被Triton服务器接受。这包括以下步骤:1）将模型转换为服务器可以存储的格式；2）编写config.pbtx模型配置文件；3）使用新添加的模型再次实例化服务器。
+
+> 提醒：借助以下步骤，我们几乎可以将任何hugging face pytorch模型转换为Triton可接受的模型。
+
+### Step 1: Load and Convert Hugging Face Model
+
+模型的转换时是使用JIT来跟踪版本完成的。根据Pytorch的文档，"torchscript"是一种从Pytorch代码创建可序列化和可优化模型的方法，它允许开发人员导出他们的模型在其它程序中复用，例如在注重效率的C++程序。
+
+导出模型输出需要：虚拟输入和标准长度来执行模型的前向传递，在模型使用虚拟输入进行前向传递期间，Pytorch会跟踪每个张量上的不同操作，创建模型的"跟踪"记录。由于创建的轨迹是相对于虚拟输入维度，因此未来模型的输入将受到虚拟输入维度的约束，并且不适用于其它序列长度或批次大小。因此，建议你使用模型能接受的最大输入虚拟维度来跟踪模型。除此之外，我们始终可以对输入序列使用填充或截断。
+
+```python
+import torch 
+from transformers import XLMRobertaForSequenceClassification,XLMRobertaTokenizer
+
+R_tokenizer = XLMRobertaTokenizer.from_pretrained('joeddav/xlm-roberta-large-xnli')
+premise = "Juiter's Biggest Started as Tiny Grains of Hail"
+hypothesis = 'This text is about space & cosmos'
+
+input_ids = R_tokenizer.encode(premise,hypothesis,return_tensors='pt',max_length=256,truncation=True,padding='max_length')
+
+mask =input_ids !=1
+mask = mask.long()
+
+class Pytorch_to_TorchScript(torch.nn.Module):
+    def __init__(self):
+        super(Pytorch_to_TorchScript,self).__init__()
+        self.model = XLMRobertaForSequenceClassification.from_pretrained('joeddav/xlm-roberta-large-xnli',torchscript=True).cuda()
+    
+    def forward(self,data,attention_mask=None):
+        return self.model(data.cuda(),attention_mask.cuda())
+
+pt_model = Pytorch_to_TorchScript().eval()
+traced_script_model = torch.jit.trace(pt_model,[input_ids,mask])
+torch.jit.save(traced_script_model,'model.pt')
+
+```
+
+接下来，将模型保存在模型存储库文件夹中，目录结构如下（你可以使用不同框架的任意数量的模型添加到此模型存储库中）。
+
+>model_repository_path/
+>|- <pytorch_model_name>/
+>|  |- config.pbtxt
+>|  |- 1/
+>|     |- model.pt
+>|
+
+### Step 2:  Write the Configuration File
+
+配置文件config.pbtxt包含允许的输入/输出类型和形状，批次大小，版本控制，平台的详细信息，因为服务器不知道这些配置的详细信息，因此，我们将它们写入单独的配置文件中。
+
+HuggingFace的RoBerta模型的配置文件如下：
+
+>```json
+>name: "zst"
+>platform: "pytorch_libtorch"
+>input [
+> {
+>    name: "input__0"
+>    data_type: TYPE_INT32
+>    dims: [1, 256]
+>  } ,{
+>    name: "input__1"
+>    data_type: TYPE_INT32
+>    dims: [1, 256]
+>  }]
+>output {
+>    name: "output__0"
+>    data_type: TYPE_FP32
+>    dims: [1, 3]
+>  }
+>```
+
+现在我们将再次在模型存储库中使用上面添加的模型实例化triton服务器。
+
+>docker run --gpus=1 --rm -p8000:8000 -p8001:8001 -p8002:8002 -v/full/path/to/example/model/repository:/models <docker image> tritonserver --model-repository=/models
+
+### Zero-Shot-Learning for Text Classification
+
+Open AI最近发布的GPT-3模型是人类历史上最大的NLP模型之一，拥有高达1750亿个参数。这个巨大模型在零样本、少样本和单样本设置下取得了可喜的结果。在某些情况下甚至超过了使用上述技术的最先进模型。这些都引起了我们
+
+深入研究NLP中的零样本学习过程。在transformers模型成功之前，大部分零样本学习研究仅集中在计算机视觉上，但现在，由于句子嵌入质量的提高，NLP领域也有很多有趣的工作正在进行。
+
+#### what is Zero-Shot-Learning（ZSL）？
+
+简而言之，ZSL是检验模型在训练过程中从未见过类别的能力。在这篇博客中，我使用了隐式嵌入方法，通过将输入句子和假设映射到同一空间中，我们找到了输入和假设的隐式嵌入模型，然后在同一空间中找到两个嵌入之间的距离。任务是在给定前提的情况下确定假设是真的（蕴涵）还是假（矛盾）。所有这些都是自然语言处理推理方法完成的，RoBerta模型是使用该方法进行训练的。
+
+ZSL的详细解释超出了本博客的范围，但上述描述足以满足本博客的需要，好奇的读者可以阅读Hugging Face团队对ZSL的详细解释，可以在这里找到[ZSL](https://joeddav.github.io/blog/2020/05/29/ZSL.html)。
+
+#### **Part2-: Client-Side Script to Interact with Triton Inference Server for Zero-Shot-Text Classification**
+
+```python
+import argparse
+import numpy as np
+import sys
+from functools import partial
+import os
+import tritongrpcclient
+import tritongrpcclient.model_config_pb2 as mc
+import tritonhttpclient
+from tritonclientutils import triton_to_np_dtype
+from tritonclientutils import InferenceServerException
+from transformers import XLMRobertaTokenizer
+from scipy.special import softmax
+R_tokenizer = XLMRobertaTokenizer.from_pretrained('joeddav/xlm-roberta-large-xnli')
+VERBOSE = False
+# hypothesis for topic classification
+topic = 'This text is about space & cosmos'
+input_name = ['input__0', 'input__1']
+output_name = 'output__0'
+def run_inference(premise, model_name='zst', url='127.0.0.1:8000', model_version='1'):
+    triton_client = tritonhttpclient.InferenceServerClient(
+        url=url, verbose=VERBOSE)
+    model_metadata = triton_client.get_model_metadata(
+        model_name=model_name, model_version=model_version)
+    model_config = triton_client.get_model_config(
+        model_name=model_name, model_version=model_version)
+    # I have restricted the input sequence length to 256
+    input_ids = R_tokenizer.encode(premise, topic, max_length=256, truncation=True, padding='max_length')
+    input_ids = np.array(input_ids, dtype=np.int32)
+    mask = input_ids != 1
+    mask = np.array(mask, dtype=np.int32)
+  
+    mask = mask.reshape(1, 256) 
+    input_ids = input_ids.reshape(1, 256)
+    input0 = tritonhttpclient.InferInput(input_name[0], (1,  256), 'INT32')
+    input0.set_data_from_numpy(input_ids, binary_data=False)
+    input1 = tritonhttpclient.InferInput(input_name[1], (1, 256), 'INT32')
+    input1.set_data_from_numpy(mask, binary_data=False)
+    output = tritonhttpclient.InferRequestedOutput(output_name,  binary_data=False)
+    response = triton_client.infer(model_name,         model_version=model_version, inputs=[input0, input1], outputs=[output])
+    logits = response.as_numpy('output__0')
+    logits = np.asarray(logits, dtype=np.float32)
+# we throw away "neutral" (dim 1) and take the probability of
+    # "entailment" (2) as the probability of the label being true 
+    entail_contradiction_logits = logits[:,[0,2]]
+    probs = softmax(entail_contradiction_logits)
+    true_prob = probs[:,1].item() * 100
+    print(f'Probability that the label is true: {true_prob:0.2f}%')
+# topic classification premises
+if __name__ == '__main__':
+    run_inference('Jupiter’s Biggest Moons Started as Tiny Grains of Hail')
+```
+
+>**Output:** *Probability that the label is true: 98.28%*
+
+### Conclusion
+
+在这篇博客中，我们了解了如何设置自己的Triton推理服务器，Triton服务器的优势是什么，以及如何编写最少的python脚本来开始与Triton服务器通信，即发送请求和接收返回预测。这将是一系列博客文章，在下一篇博客文章中，我将把客户端脚本包装到AWS Lambda 函数中，使用AWS上的SLS部署来部署它，它将部署在AWS EC2实例上Triton服务器进行通信。
