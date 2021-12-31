@@ -73,8 +73,8 @@ tags:
 预期输出应该是(默认情况下，triton在端口8000上提供服务)
 
 >HTTP/1.1 200 OK
->< Content-Length: 0
->< Content-Type: text/plain
+>Content-Length: 0
+>Content-Type: text/plain
 
 从现在起，我们已经使用模型存储库中已经存在的默认模型运行在Triton 服务器中。下一步是将hugging face的RoBerta模型添加到模型存储库中，使其被Triton服务器接受。这包括以下步骤:1）将模型转换为服务器可以存储的格式；2）编写config.pbtx模型配置文件；3）使用新添加的模型再次实例化服务器。
 
