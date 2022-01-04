@@ -73,7 +73,9 @@ tags:
 预期输出应该是(默认情况下，triton在端口8000上提供服务)
 
 >HTTP/1.1 200 OK
+>
 >Content-Length: 0
+>
 >Content-Type: text/plain
 
 从现在起，我们已经使用模型存储库中已经存在的默认模型运行在Triton 服务器中。下一步是将hugging face的RoBerta模型添加到模型存储库中，使其被Triton服务器接受。这包括以下步骤:1）将模型转换为服务器可以存储的格式；2）编写config.pbtx模型配置文件；3）使用新添加的模型再次实例化服务器。
@@ -116,10 +118,15 @@ torch.jit.save(traced_script_model,'model.pt')
 接下来，将模型保存在模型存储库文件夹中，目录结构如下（你可以使用不同框架的任意数量的模型添加到此模型存储库中）。
 
 >model_repository_path/
+>
 >|- <pytorch_model_name>/
+>
 >|  |- config.pbtxt
+>
 >|  |- 1/
+>
 >|     |- model.pt
+>
 >|
 
 #### Step 2:  Write the Configuration File
