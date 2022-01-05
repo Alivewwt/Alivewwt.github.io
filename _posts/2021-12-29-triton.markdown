@@ -117,13 +117,13 @@ torch.jit.save(traced_script_model,'model.pt')
 
 接下来，将模型保存在模型存储库文件夹中，目录结构如下（你可以使用不同框架的任意数量的模型添加到此模型存储库中）。
 
->model_repository_path/
+>model_repository_path
 >
->|- <pytorch_model_name>/
+>|- <pytorch_model_name>
 >
 >​	|- config.pbtxt
 >
->​	|- 1/
+>​	|- 1
 >
 >​		 |- model.pt
 
