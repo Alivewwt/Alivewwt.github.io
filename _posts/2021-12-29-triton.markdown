@@ -121,13 +121,11 @@ torch.jit.save(traced_script_model,'model.pt')
 >
 >|- <pytorch_model_name>/
 >
->|  |- config.pbtxt
+>​	|- config.pbtxt
 >
->|  |- 1/
+>​	|- 1/
 >
->|     |- model.pt
->
->|
+>​		 |- model.pt
 
 #### Step 2:  Write the Configuration File
 
