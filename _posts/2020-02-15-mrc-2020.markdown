@@ -10,7 +10,7 @@ tags:
     - NLP
 ---
 
->本文参考自[BERT系列（三）-- BERT在阅读理解与问答上应用](https://cloud.tencent.com/developer/article/1465005)，部分内容有删改。
+> 本文参考自[BERT系列（三）-- BERT在阅读理解与问答上应用](https://cloud.tencent.com/developer/article/1465005)，部分内容有删改。
 
 机器阅读理解和问答是自然语言处理领域的一个热门主题。该任务旨在让机器人像人类一样能够看懂文章。因此本篇将通过介绍如何利用BERT来解决阅读理解与问答问题，来帮助新手入门阅读理解任务。
 
@@ -50,23 +50,24 @@ BERT的输出为每个token所对应的encoding vector。假设 vector的维度�
 ##### 参数介绍
 
 - bert_dir:预训练模型的存放路径，其中包括的重要参数有：
+  
   - vocab.txt:提供的此表用于输入数据的token embedding查找
   - bert_config:提供预训练模型的配置信息
   - init_checkpoint:预训练模型的checkpoint
 
 - max_seq_length:最大序列长度，长度小于该长度，将进行padding处理，大于该长度，序列将进行分段
+
 - doc_stride:文档滑动窗口，当需要对序列进行分段时，相邻分段序列的重叠长度
+
 - max_query_length:最大问题长度，序列长度大于该长度时，问题将被截断
 
 ##### 训练细节
 
 在训练过程中objective function则定义如下：
 
-
 $$
 L_{\theta}(T) -\sum_{i}log(p_{\theta}(\tilde{y_i} \mid  x_i^e))
 $$
-
 
 其中$\tilde y_i$位标准答案开头结尾所在位置，$T = {(\tilde y_i, x^e_i)}$表示训练集，我们通过BERT+全连接层来建模$p_\theta(y \mid x)$。
 

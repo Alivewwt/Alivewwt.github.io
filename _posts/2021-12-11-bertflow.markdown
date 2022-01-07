@@ -10,9 +10,7 @@ tags:
     - NLP
 ---
 
-
-
->本文参考自[BERT-flow: Sentence-BERT + Normalizing flows](https://zhuanlan.zhihu.com/p/331807184)，部分有修改。
+> 本文参考自[BERT-flow: Sentence-BERT + Normalizing flows](https://zhuanlan.zhihu.com/p/331807184)，部分有修改。
 
 ### 概述
 
@@ -41,40 +39,34 @@ BERT句向量一般有两种获取方式：取最好一两层embedding的平均�
 
 对一个句子$$x_{x:T}=(x_1,x_2,...,x_T)$$，语言模型以自回归的方式对其联合概率进行因式分解，即
 
-
 $$
 log p(x_{1:T})=\sum_{t=1}^Tlog p(x_t \mid c_t)
 $$
 
-
 而BERT使用的MLM (掩码语言模型)，则是：
-
 
 $$
 p(\overline x \mid \hat x) \sum_{t=1}^Tm_t p(x_t\mid c_t)
 $$
 
-
 其中，$$\hat x$$表示掩码后的句子，$$\overline x$$表示被掩码的单词，当$$x_t$$被掩码时$$m_t=1$$，否则$$m_x=0$$（仅被预测掩码的单词）。LM和MLM都可看作是预测给定上下文$$c$$时，单词$x$的条件概率:
-
 
 $$
 p(x\mid c)= \frac{h_c^Tw_x}{\sum_x' h^T_c w'_x}
 $$
 
-
 根据（Breaking the softmax bottleneck: A high-rank rnn language model.）论文有如下近似：
-
 
 $$
 h_c^Tw_x \approx log p^*(x\mid c)+\lambda_c\\
 =PMI(x,c)+logp(x)+\lambda_c
 $$
 
-
 其中，$$PMI(x,c)=log\frac{p(x,c)}{p(x)p(c)}$$表示$$x$$和$$c$$的点互式信息，PMI是共现关系(Cooccurrence)的一种近似度量。PMI越大，共现概率越大，在某种意义上“语义”这个概念的数学表达对应的就是某种能够反映共现关系的统计量，因此统计意义上的共现也暗示了二者语义和语境上的接近。
 
-再次考虑:$$p(x\mid c) = \frac{exp(h^T_cw_x)}{\sum_x'exp(h^T_cw_x')}$$,不难看出，语言模型的目标最大化token和上下文的共现概率。给定两个人下文$c$和$c'$，如果它们与同一个词$w$有共现关系，那么$c$和$c'$应该也有相似的语义，因此向目标优化的过程中，$c$和$w$共现会使$h_c$各$x_w$逐渐接近，而$c$和$c'$间的距离也会逐渐被拉近。简单来说，语言模型的训练过程就是不断调整每个句子在空间中位置的过程。更高层次的上下文与上下文间的共现关系也会在预训练过程中得到推理和传播，而上下文embedding之间的隐含交互作用也会由高阶的共现关系产生。
+再次考虑:$$p(x\mid c) = \frac{exp(h^T_cw_x)}{\sum_x'exp(h^T_cw_x')}$$
+
+,不难看出，语言模型的目标最大化token和上下文的共现概率。给定两个人下文$c$和$c'$，如果它们与同一个词$w$有共现关系，那么$c$和$c'$应该也有相似的语义，因此向目标优化的过程中，$c$和$w$共现会使$h_c$各$x_w$逐渐接近，而$c$和$c'$间的距离也会逐渐被拉近。简单来说，语言模型的训练过程就是不断调整每个句子在空间中位置的过程。更高层次的上下文与上下文间的共现关系也会在预训练过程中得到推理和传播，而上下文embedding之间的隐含交互作用也会由高阶的共现关系产生。
 
 由以上分析，可以发现BERT的训练目标与语义相似度计算的目标近似，所以BERT训练出来的句向量应该包含了语义相似度信息。
 
@@ -84,11 +76,9 @@ $$
 
 **Gao et al**.(2019）和**Wang et al**.(2020)指出：语言建模时，最大化以下公式，通常会产生一个各向异性的词嵌入空间。
 
-
 $$
 p(x\mid c) = \frac{exp(h^T_cw_x)}{\sum x'exp(h^T_cw_x')}
 $$
-
 
 各向异性是指单词嵌入在向量空间中占据一个狭窄的圆锥体。
 
