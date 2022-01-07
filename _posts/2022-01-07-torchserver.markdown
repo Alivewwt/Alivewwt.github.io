@@ -100,7 +100,7 @@ TorchServe是Pytorch官方开发的开源工具，源码地址[GitHub - pytorch/
    如果希望加入一些自定义的preporcessing和postprocessing，可以加入该文件。比如，基于transformer框架的预训练语言模型需要通过from_pretrained函数来加载，我们需要改写handler下的__load__pickled__model函数
    
    ```
-    def _load_pickled_model(self, model_dir, model_file):
+   def _load_pickled_model(self, model_dir, model_file):
            """
            Loads the pickle file from the given model path.
            Args:
@@ -114,13 +114,13 @@ TorchServe是Pytorch官方开发的开源工具，源码地址[GitHub - pytorch/
            Returns:
                serialized model file: Returns the pickled pytorch model file
            """
-           model_def_path = os.path.join(model_dir, model_file)
+           model_def_path = os.path.join(model_dir, model_file)
            if not os.path.isfile(model_def_path):
                raise RuntimeError("Missing the model.py file")
    
            module = importlib.import_module(model_file.split(".")[0])
            model_class_definitions = list_classes_from_module(module)
-   
+           
            logger.info("one class as model definition. {}".format(
                        model_class_definitions[0]))
    
@@ -129,9 +129,7 @@ TorchServe是Pytorch官方开发的开源工具，源码地址[GitHub - pytorch/
    
            model_class = model_class_definitions[0]
            model = model_class.from_pretrained(model_dir,config = bertconfig)
-   
            model.to(self.device)
-   
            return model
    ```
 
@@ -159,4 +157,4 @@ TorchServe是Pytorch官方开发的开源工具，源码地址[GitHub - pytorch/
 
 ### 总结
 
-本篇博客介绍了使用docker安装torchserve，和handlers文件的功能，以transformers的bert模型为例，如何自定以该文件，来实现加载预训练模型，然后到模型打包生成最后使用docker提供模型服务。
+本篇博客简单介绍了使用docker安装torchserve步骤和handlers文件的功能，并且以transformers的bert模型为例，讲述了如何自定义该文件来实现加载预训练模型，然后，将模型打包生成mar 文件，最后使用docker提供模型服务。
