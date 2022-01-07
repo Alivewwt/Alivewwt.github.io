@@ -4,7 +4,7 @@ title:      TorchServe部署transformers model
 subtitle:   "TorchServe"
 date:       2022-01-07 10:00:00
 author:     "Wwt"
-header-img: "img/torchserve/bg.png"
+header-img: "/img/torchserve/bg.png"
 catalog: true
 tags:   
     - NLP
