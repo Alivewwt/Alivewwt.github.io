@@ -87,17 +87,17 @@ $$
 对于EH-ET,SH-OH,ST-OT,我们使用统一的标注框架。
 
 $$
-P(y_{i,j})=SOftmax(W_o h_{i,j}+b_o) \\
+P(y_{i,j})=Softmax(W_o h_{i,j}+b_o) \\
 link(w_i,w_j) =argmaxP(y_{i,j}==l)
 $$
 
-### 实验结果
+### 3.实验结果
 
 该模型在NYT和WebNLG两个关系抽取任务上都达到了当时的SOTA性能。
 
 ![5.png](/img/tplinker/5.png)
 
-### 未来的工作
+### 4.未来的工作
 
 这里主要提一下值得改进的地方：
 
