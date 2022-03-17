@@ -4,7 +4,7 @@ title:      TorchServe部署transformers model
 subtitle:   "TorchServe"
 date:       2022-01-07 10:00:00
 author:     "Wwt"
-header-img: "/img/torchserve/bg.png"
+header-img: "img/torchserve/bg.png"
 catalog: true
 tags:   
     - NLP
@@ -120,7 +120,7 @@ TorchServe是Pytorch官方开发的开源工具，源码地址[GitHub - pytorch/
    
            module = importlib.import_module(model_file.split(".")[0])
            model_class_definitions = list_classes_from_module(module)
-           
+   
            logger.info("one class as model definition. {}".format(
                        model_class_definitions[0]))
    

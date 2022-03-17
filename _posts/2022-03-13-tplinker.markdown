@@ -4,7 +4,7 @@ title:      关系抽取新方案--TPLinker
 subtitle:   "TPLinker"
 date:       2022-03-12 10:00:00
 author:     "Wwt"
-header-img: "/img/tplinker/bg.png"
+header-img: "img/tplinker/bg.png"
 catalog: true
 tags:   
     - NLP
