@@ -66,7 +66,6 @@ Milvus 2.0不支持字符串，启动mysql作为docker容器来存储和调用DN
 ```
 from pymilvus import connections
 import pymysql
-
 connections.connect(host='localhost', port='19530')
 conn = pymysql.connect(host='localhost', user='root', port=3306, password='123456', database='mysql',local_infile=True)
 cursor = conn.cursor()
@@ -95,7 +94,6 @@ svd = TruncatedSVD(n_components=VECTOR_DIMS,random_state=42)
 #PCA 降维
 X_svd = svd.fit_transform(X)
 joblib.dump(svd,SVD_PATH)
-
 #加载PCA模型
 svd = joblib.load(SVD_PATH)
 svd_vector = svd.transform(X)
@@ -106,5 +104,3 @@ svd_vector = svd.transform(X)
 ### DNA序列物种分类
 
 输入查询序列，在Milvus数据库中搜索与其相似的序列便可以对搜索对象进行物种分类，下图中对未知物种的序列进行搜索，成功根据结果返回可能物种的序列。证明了Milvus向量相似性搜索能够召回相似物种的序列，便于进一步进行分析和预测。
-
-# 
