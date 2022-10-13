@@ -38,7 +38,7 @@ milvus 使用简单的非结构化数据管理，能够将目标对象在万亿�
 
 结合Milvus与Mysql的分类模型结构如下图所示，包括了插入和检索两个流程。在插入milvus之前，该示例首先将所有的DNA序列进行了k-mer处理，然后训练了词袋模型用以特征提取和向量化。
 
-<img title="" src="img/milvus/1.png" alt="1.png" width="297" data-align="center">
+<img title="" src="file:///img/milvus/1.png" alt="" data-align="center">
 
 ##### Milvus下载
 
