@@ -2,7 +2,7 @@
 layout:     post
 title:      Pre-training for document AI with Unified Text and Image Masking
 subtitle:   "LayoutLMv3"
-date:       2022-10-19 10:00:00
+date:       2022-10-18 10:00:00
 author:     "Wwt"
 header-img: "img/layoutlmv3/bg.png"
 catalog: true
@@ -10,13 +10,14 @@ tags:
     - NLP
 ---
 
+
 ### 背景
 
 基于自监督预训练技术在文档智能方面取得了显著的成功。大部分预训练模型使用遮蔽语言模型来学习文本模态的双向表示，与图像模态上预训练任务不同，这无疑增加了在多模态领域的学习表示难度。因此我们提出**LayoutLM v3**预训练多模态的模型，统一了文本和图像遮掩任务。另外，LayoutLMv3 模型还添加了word-patch对齐模块，通过预测对应的图像来预测被遮掩的单词，来学习交叉模块之间的对齐关系。简单统一架构和训练目标使得LayoutLM v3成为以文本和图像为中心的文档智能预训练模型。
 
 ### 模型介绍
 
-<img title="" src="file:///img/layoutlmv3/1.png" alt="1.png" data-align="center" width="390">
+![1.png](/img/layoutlmv3/1.png)
 
 图像（例如密集图像像素或连续区域特征）和文本（即离散目标）的不同粒度进一步增加了跨模态对齐学习的难度，同时这对多模态表示学习至关重要。
 
