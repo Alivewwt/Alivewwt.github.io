@@ -1,0 +1,67 @@
+---
+layout:     post
+title:      Pre-training for document AI with Unified Text and Image Masking
+subtitle:   "LayoutLMv3"
+date:       2022-10-19 10:00:00
+author:     "Wwt"
+header-img: "img/layoutlmv3/bg.png"
+catalog: true
+tags:   
+    - NLP
+---
+
+### 背景
+
+基于自监督预训练技术在文档智能方面取得了显著的成功。大部分预训练模型使用遮蔽语言模型来学习文本模态的双向表示，与图像模态上预训练任务不同，这无疑增加了在多模态领域的学习表示难度。因此我们提出**LayoutLM v3**预训练多模态的模型，统一了文本和图像遮掩任务。另外，LayoutLMv3 模型还添加了word-patch对齐模块，通过预测对应的图像来预测被遮掩的单词，来学习交叉模块之间的对齐关系。简单统一架构和训练目标使得LayoutLM v3成为以文本和图像为中心的文档智能预训练模型。
+
+### 模型介绍
+
+<img title="" src="file:///img/layoutlmv3/1.png" alt="1.png" data-align="center" width="390">
+
+图像（例如密集图像像素或连续区域特征）和文本（即离散目标）的不同粒度进一步增加了跨模态对齐学习的难度，同时这对多模态表示学习至关重要。
+
+相比已有的工作，本文的图像嵌入使用了线性块来减少由CNN带来的计算瓶颈，消除了训练目标探测器中需要区域监督。在图像模态中预训练目标，layoutlmv3通过被遮掩的方块来学习重建离散的图像标记，而并非原始像素或区域特征，从而捕获高级布局结构而不是噪音细节。
+
+![2.png](/img/layoutlmv3/2.png)
+
+模型如上图所示，本文提出了Word-Patch Alignment (WPA)来预测文本对应的图像是否被遮掩。受到ViT和ViLT模型的启发，LayoutLMV3直接利用图像中原始块，没有复杂的预处理过程例如页面对象检测。LayoutLMv3利用transformer模型统一了MLM、MIM和WPA目标，联合学习图像、文本和多模态表示。
+
+模型的基本架构就是Transformer，包含多头注意力和position-wise全连接层。Transformer的输入是文本嵌入和图像嵌入，经过Transformer网络层后，最后一层输出的就是文本-图像的上下文表示。
+
+- 文本嵌入：文本嵌入包含了词嵌入和位置嵌入。我们使用现成的OCR工具对文本图像进行处理，来获得文本内容和相应的2D位置信息。使用RoBERTa的词矩阵来初始化词嵌入，其中一维位置信息就是文本序列的标记索引，二维布局位置是文本序列的边界框坐标。v2和v3不同的地方在于，v2每个词都有自己的二维位置坐标，v3采用段级布局，即段中的单词共享二维位置坐标。
+
+- 图像嵌入：本文将文档图像调整为$H*W$,并用$I \in R^{C*H*W}$表示图像，然后我们将图像分割成一系列均匀的$P * P$的块，将图像线性投影到$D$维度，并将它们拉平到长度为$M=HW/P^2$。然后，我们为每块添加一维位置坐标向量，这是由于我们在初步实验中没有发现二维位置嵌入有提升。
+
+### 预训练目标
+
+1. **Masked Language Modeling（MLM）** 随机遮掩30%的连续文本字符，从视觉上下文以及文本上下文来预测这些被遮掩的token。注意视觉信息要同时要被mask掉。
+
+2. **Masked Image Modeling (MIM)**  随机mask掉约40%的image token，MIM与MLM是对称的，MIM目标是利用交叉熵函数，通过text和image的上下文来重建被遮掩的image token。
+
+3. **Word-Patch Alignment (WPA)** 每个文本单词对应一个图像块，由于我们分别用MLM和MIM随机遮掩文本和图像，文本和图像之间没有对齐学习。因此，本文提出**WPA**来学习文本单词和图像块之间的细粒度对齐。对于那些被MLM的文本，但是没有被MIM(每个text也有位置信息)，赋予unaligned标签，对于那些没有被MLM，也没被MIM的，赋予aligned标签。对那些被MLM的文本，这些token不参与损失计算，这样做的目的为了防止模型从masked文本和图像块间学习到一些没有用的关系。
+
+### 实验
+
+![3.png](/img/layoutlmv3/3.png)
+
+上图是整体实验结果，表明本文提出的模型，不管是Base还是Large，在多个数据集上都取得了SOTA结果。
+
+- 任务1 表格和收据理解 该任务要求抽取和重建表格和收据的文本内容。将该任务转化为序列标注任务，给每个词打上标签。本文模型在FUNSD数据集上取得了**92.08%**的性能，相较于StructralLM的85.14%性能，取得了显著提升。
+
+- 任务2 文本分类 该任务是预测文本图像的类别。在RVL-CDIP数据集上进行实验，共16个类别。与之前的工作相比，LayoutLMv3以更小的模型尺寸实现了更好或可比较的结果。
+
+- 任务3 文本视觉问答 文本视觉问答接收文本图像和问题作为输入，输出答案，将该任务定义成一个QA问题。在DocVQA数据集上进行实验，使用ANLS（也称为平均归一化Levenshtein similarity）,$LayoutLMv3_{BASE}$比$LayoutLMv2_{BASE}$的ANLS分数从78.08提高至78.76，$LayoutLMv3_{LARGE}$比$LayoutLMv2_{BASE}$取得了4.61的绝对收益。
+
+#### 文档版面分析任务
+
+![4.png](/img/layoutlmv3/4.png)
+
+本文使用mean aversge precision（MAP）和intersection over union（IOU）来评估性能。上面表中体现了LayoutLM v3在所有指标上都获取了最佳性能。
+
+#### 消融实验
+
+![5.png](/img/layoutlmv3/5.png)
+
+三个预训练任务全部用上效果是最好的。
+
+LayoutLMv3对LayoutLM系列模型的预训练方法进行了重新设计，不再有视觉模型，转而采用VIT代替，减少了模型参数。采用MLM、MIM和MPA三项预训练任务来学习多模态特征表示，在image-centric以及text-centric任务上取得多个SOTA。
