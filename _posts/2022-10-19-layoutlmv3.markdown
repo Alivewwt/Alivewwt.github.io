@@ -52,7 +52,7 @@ tags:
 
 - 任务2 文本分类 该任务是预测文本图像的类别。在RVL-CDIP数据集上进行实验，共16个类别。与之前的工作相比，LayoutLMv3以更小的模型尺寸实现了更好或可比较的结果。
 
-- 任务3 文本视觉问答 文本视觉问答接收文本图像和问题作为输入，输出答案，将该任务定义成一个QA问题。在DocVQA数据集上进行实验，使用ANLS（也称为平均归一化Levenshtein similarity）,$LayoutLMv3_{BASE}$比$LayoutLMv2_{BASE}$的ANLS分数从$78.08$提高至$78.76$，$LayoutLMv3_{LARGE}$比$LayoutLMv2_{BASE}$取得了$4.61$的绝对收益。
+- 任务3 文本视觉问答 文本视觉问答接收文本图像和问题作为输入，输出答案，将该任务定义成一个QA问题。在DocVQA数据集上进行实验，使用ANLS（也称为平均归一化Levenshtein similarity）,$LayoutLMv3_{BASE}比LayoutLMv2_{BASE}$的ANLS分数从$78.08$提高至$78.76$，$LayoutLMv3_{LARGE}比LayoutLMv2_{BASE}$取得了$4.61$的绝对收益。
 
 #### 文档版面分析任务
 
