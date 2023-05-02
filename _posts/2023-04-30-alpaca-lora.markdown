@@ -1,15 +1,3 @@
----
-layout:     post
-title:      Alpaca-lora开源实现
-subtitle:   "Alpaca-lora"
-date:       2023-04-30 10:00:00
-author:     "Wwt"
-header-img: "img/alpaca-lora/bg.png"
-catalog: true
-tags:   
-    - NLP
----
-
 > 本文参考自[# Alpaca-Lora (羊驼-Lora): 轻量级 ChatGPT 的开源实现（对标 Standford Alpaca](https://zhuanlan.zhihu.com/p/615646636)，部分有删改
 
 ### 总览
@@ -24,7 +12,7 @@ Alpaca的介绍在[Alpaca: A Strong, Replicable Instruction-Following Model]([St
 
 它使用了52K个instruction -following examples 来微调Meta的大语言模型LLaMA 7B(Meta 开放了模型权重以及inference代码，详见 https://github.com/facebookresearch/llama ) ,从而生成了Alpaca 7B。
 
-但是这52K个instruction-following examples是如何生成的呢？Alpaca 团队使用了https://github.com/yizhongw/self-instruct 提供的175个 seed tasks。
+但是这52K个instruction-following examples是如何生成的呢？Alpaca 团队使用了[https://github.com/yizhongw/self-instruct]()
 
 不得不说，这种方法很巧妙，很像蒸馏训练。将OpenAI性能完备的模型作为Teacher,来指导参数更少的Alpaca模型进行训练，大幅降低了训练成本。其中调用Open API的成本不到500美刀，另外微调7B参数的LLaMA模型，使用云服务商提供的8块80GB A100显卡，训练3小时，消费不到100美刀。因此整体成本是小于600美刀。
 
