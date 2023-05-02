@@ -1,3 +1,15 @@
+---
+layout:     post
+title:      Alpaca-lora开源实现部署
+subtitle:   "Alpaca"
+date:       2023-04-30 10:00:00
+author:     "Wwt"
+header-img: "img/alpaca-lora/bg.png"
+catalog: true
+tags:   
+    - NLP
+---
+
 > 本文参考自[# Alpaca-Lora (羊驼-Lora): 轻量级 ChatGPT 的开源实现（对标 Standford Alpaca](https://zhuanlan.zhihu.com/p/615646636)，部分有删改
 
 ### 总览
