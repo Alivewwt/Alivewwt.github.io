@@ -12,15 +12,13 @@ Alpaca的介绍在[Alpaca: A Strong, Replicable Instruction-Following Model]([St
 
 它使用了52K个instruction -following examples 来微调Meta的大语言模型LLaMA 7B(Meta 开放了模型权重以及inference代码，详见 https://github.com/facebookresearch/llama ) ,从而生成了Alpaca 7B。
 
-但是这52K个instruction-following examples是如何生成的呢？Alpaca 团队使用了[https://github.com/yizhongw/self-instruct]()
-
-不得不说，这种方法很巧妙，很像蒸馏训练。将OpenAI性能完备的模型作为Teacher,来指导参数更少的Alpaca模型进行训练，大幅降低了训练成本。其中调用Open API的成本不到500美刀，另外微调7B参数的LLaMA模型，使用云服务商提供的8块80GB A100显卡，训练3小时，消费不到100美刀。因此整体成本是小于600美刀。
+但是这52K个instruction-following examples是如何生成的呢？Alpaca 团队使用了[https://github.com/yizhongw/self-instruct]()。不得不说，这种方法很巧妙，很像蒸馏训练。将OpenAI性能完备的模型作为Teacher,来指导参数更少的Alpaca模型进行训练，大幅降低了训练成本。其中调用Open API的成本不到500美刀，另外微调7B参数的LLaMA模型，使用云服务商提供的8块80GB A100显卡，训练3小时，消费不到100美刀。因此整体成本是小于600美刀。
 
 ### LoRA简要介绍
 
 关于Alpaca-lora和stanford Alpaca模型的区别，先入为主的印象是,standford alpaca是在LLaMA整个模型上微调，而Alpaca-Lora则是利用Lora技术（LoRA：Low-Rank Adaption of Large Language Models），在冻结原模型的LLaMA参数的情况下，通过往模型中加入额外的网络层，并只训练这些新增的网络层参数。由于这些新增参数数量较少，这样不仅finetune的成本明显下降，还能获得和全模型微调类似的效果。
 
-<img title="" src="file:///img/alpaca-lora/2.png" alt="截屏2023-04-23 22.49.42.png" width="342">
+![](/img/alpaca-lora/2.png)
 
 蓝色模块是原模型，橙色模块是新增网络层，通过控制参数r的大小，可以有效减少新增网络层的参数。
 
