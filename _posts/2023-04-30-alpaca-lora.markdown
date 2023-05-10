@@ -10,11 +10,11 @@ tags:
     - NLP
 ---
 
-> 本文参考自[# Alpaca-Lora (羊驼-Lora): 轻量级 ChatGPT 的开源实现（对标 Standford Alpaca](https://zhuanlan.zhihu.com/p/615646636)，部分有删改
+> 本文参考自[# Alpaca-Lora (羊驼-Lora): 轻量级 ChatGPT 的开源实现（对标 Standford Alpaca)](https://zhuanlan.zhihu.com/p/615646636)，部分有删改
 
 ### 总览
 
-本文介绍Alpaca-Lora(羊驼-Lora)，可以认为是ChatGPT轻量级的开源版本，它使用Lora(Low rank Adaption)技术在Meta 的LLMA 7B模型上进行微调。只需要训练很小一部分参数就可以获得媲美Standford Alpaca模型的效果。本文主要**介绍它在本地安装使用的方法。**
+本文介绍Alpaca-Lora(羊驼-Lora)，可以认为是ChatGPT轻量级的开源版本，它使用Lora(Low rank Adaption)技术在Meta 的LLMA 7B模型上进行微调。只需要训练很小一部分参数就可以获得媲美Stanford Alpaca模型的效果。本文主要**介绍它在本地安装使用的方法。**
 
 ### Alpaca原理介绍
 
@@ -28,7 +28,7 @@ Alpaca的介绍在[Alpaca: A Strong, Replicable Instruction-Following Model]([St
 
 ### LoRA简要介绍
 
-关于Alpaca-lora和stanford Alpaca模型的区别，先入为主的印象是,standford alpaca是在LLaMA整个模型上微调，而Alpaca-Lora则是利用Lora技术（LoRA：Low-Rank Adaption of Large Language Models），在冻结原模型的LLaMA参数的情况下，通过往模型中加入额外的网络层，并只训练这些新增的网络层参数。由于这些新增参数数量较少，这样不仅finetune的成本明显下降，还能获得和全模型微调类似的效果。
+关于Alpaca-lora和stanford Alpaca模型的区别，先入为主的印象是,stanford alpaca是在LLaMA整个模型上微调，而Alpaca-Lora则是利用Lora技术（LoRA：Low-Rank Adaption of Large Language Models），在冻结原模型的LLaMA参数的情况下，通过往模型中加入额外的网络层，并只训练这些新增的网络层参数。由于这些新增参数数量较少，这样不仅finetune的成本明显下降，还能获得和全模型微调类似的效果。
 
 ![](/img/alpaca-lora/2.png)
 
@@ -77,4 +77,4 @@ README 文件中说明使用pip install -r requirements.txt就OK了。另外我�
 
 ### 小结
 
-本文介绍了ChatGPT轻量级的开源版本Alpaca-Lora（羊驼-lora），使用Lora(Low-Rank Adapation)技术在Meta 的LLaMA 7B模型上微调，只需要训练很小一部分参数就可以获得媲美Stanardford Alpaca模型的效果。
+本文介绍了ChatGPT轻量级的开源版本Alpaca-Lora（羊驼-lora），使用Lora(Low-Rank Adapation)技术在Meta 的LLaMA 7B模型上微调，只需要训练很小一部分参数就可以获得媲美Stanford Alpaca模型的效果。
